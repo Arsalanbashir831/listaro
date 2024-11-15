@@ -1,0 +1,16 @@
+<svg viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+  <!-- Product listing icon -->
+  <g transform="translate(10, 18)">
+    <!-- Base box/product shape -->
+    <rect x="0" y="0" width="18" height="18" rx="4" fill="none" stroke="#6366F1" stroke-width="1.75"/>
+    <!-- Inner lines suggesting list items -->
+    <line x1="4" y1="6" x2="14" y2="6" stroke="#6366F1" stroke-width="1.75" stroke-linecap="round"/>
+    <line x1="4" y1="9" x2="14" y2="9" stroke="#6366F1" stroke-width="1.75" stroke-linecap="round"/>
+    <line x1="4" y1="12" x2="11" y2="12" stroke="#6366F1" stroke-width="1.75" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Main text -->
+  <text x="35" y="38" font-family="Arial" font-size="32" font-weight="300" letter-spacing="0.5" fill="#333333">
+    listaro
+  </text>
+</svg>

@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ant-menu-item-selected {
+    background-color: #6a0dad !important; /* Customize with your desired background color */
+    color: #ffffff !important; /* Customize with your desired text color */
+  }
+
+  /* .custom-steps .ant-steps-item-finish .ant-steps-item-icon {
+  
+  } */
+  
+  .custom-steps .ant-steps-item-process .ant-steps-item-icon {
+    background-color: #6a0dad !important; /* Current step color */
+  }
+  
+  .custom-steps .ant-steps-item-wait .ant-steps-item-icon {
+    background-color: #e0e0e0 !important; /* Upcoming step color */
+  }
+  
+  .custom-steps .ant-steps-item-title {
+    color: black !important; /* Step title color */
+  }
