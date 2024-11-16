@@ -21,11 +21,11 @@ const Authentication = () => {
     >
       <Row style={{ height: "100%" }}>
         {/* Left Side: Welcome Section */}
-        <Col
+        <Col className="bg-purple-700"
           xs={0}
           md={12}
           style={{
-            backgroundColor: "#1890ff",
+           
             color: "white",
             display: "flex",
             alignItems: "center",
@@ -35,7 +35,7 @@ const Authentication = () => {
         >
           <div style={{ textAlign: "center", maxWidth: "400px" }}>
             <Title level={2} style={{ color: "white" }}>
-              Come join us!
+              Come join Listaro !
             </Title>
             <Text style={{ fontSize: "16px", color: "white" }}>
               We are so excited to have you here! If you havent already, create

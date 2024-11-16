@@ -1,11 +1,14 @@
 import { GoogleOutlined } from "@ant-design/icons";
 import { Input, Button, Space, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { Title, Text } = Typography;
+  const navigation = useNavigate();
 
   return (
     <>
+  
       <Title level={2} style={{ textAlign: "center" }}>
         Login
       </Title>
@@ -14,7 +17,7 @@ const Login = () => {
         <Input placeholder="Email" size="large" type="email" />
         <Input.Password placeholder="Password" size="large" />
 
-        <Button type="primary" size="large" block style={{ marginTop: "16px" }}>
+        <Button onClick={()=>navigation('/dashboard')} className="bg-purple-700" type="primary" size="large" block style={{ marginTop: "16px" }}>
           Login
         </Button>
       </Space>

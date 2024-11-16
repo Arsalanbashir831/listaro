@@ -3,10 +3,11 @@ import {
  
 } from "@ant-design/icons";
 import { Input, Button, Space, Typography } from "antd";
+import { useNavigation , useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const { Title, Text } = Typography;
-
+const navigation = useNavigate();
   return (
     <>
       <Title level={2} style={{ textAlign: "center" }}>
@@ -19,7 +20,7 @@ const Signup = () => {
         <Input.Password placeholder="Password" size="large" />
         <Input.Password placeholder="Confirm Password" size="large" />
 
-        <Button type="primary" size="large" block style={{ marginTop: "16px" }}>
+        <Button onClick={()=> navigation('/dashboard')} className="bg-purple-700" type="primary" size="large" block style={{ marginTop: "16px" }}>
           Signup
         </Button>
       </Space>

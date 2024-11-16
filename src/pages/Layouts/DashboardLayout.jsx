@@ -1,16 +1,38 @@
-import { Layout, Menu, Dropdown, Button, Avatar, Typography } from "antd";
+import React from "react";
+import { Layout, Menu, Dropdown, Button, Avatar, Typography, Modal } from "antd";
 import {
   DashboardOutlined,
   LogoutOutlined,
   DownOutlined,
 } from "@ant-design/icons";
-import { Outlet, Link } from "react-router-dom";
-import { FaImagePortrait, FaKeycdn } from "react-icons/fa6";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { FaKeycdn } from "react-icons/fa6";
+import { IoSettingsSharp } from "react-icons/io5";
+import { RiMoneyEuroCircleFill } from "react-icons/ri";
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
+const { confirm } = Modal;
 
 const DashboardLayout = () => {
+  const navigate = useNavigate();
+
+  // Logout confirmation
+  const showLogoutConfirmation = () => {
+    confirm({
+      title: "Are you sure you want to logout?",
+      content: "Your session will end, and you will need to login again to continue.",
+      okText: "Logout",
+      cancelText: "Cancel",
+      onOk() {
+        navigate("/auth");
+      },
+      onCancel() {
+        console.log("Logout canceled.");
+      },
+    });
+  };
+
   // Define menu items dynamically
   const menuItems = [
     {
@@ -27,16 +49,21 @@ const DashboardLayout = () => {
     },
     {
       key: "3",
-      icon: <FaImagePortrait />,
-      label: "Image Optimization",
-      path: "/dashboard/image-optimization",
+      icon: <IoSettingsSharp />,
+      label: "Settings",
+      path: "/dashboard/profile-settings",
     },
-    
+    {
+      key: "4",
+      icon: <RiMoneyEuroCircleFill />,
+      label: "Subscription",
+      path: "/dashboard/user-subscription",
+    },
     {
       key: "7",
       icon: <LogoutOutlined />,
       label: "Logout",
-      path: "/logout",
+      onClick: showLogoutConfirmation,
     },
   ];
 
@@ -47,10 +74,10 @@ const DashboardLayout = () => {
         <Link to="/dashboard/profile">Profile</Link>
       </Menu.Item>
       <Menu.Item key="settings">
-        <Link to="/dashboard/settings">Settings</Link>
+        <Link to="/dashboard/profile-settings">Settings</Link>
       </Menu.Item>
-      <Menu.Item key="logout">
-        <Link to="/logout">Logout</Link>
+      <Menu.Item key="logout" onClick={showLogoutConfirmation}>
+        Logout
       </Menu.Item>
     </Menu>
   );
@@ -58,7 +85,7 @@ const DashboardLayout = () => {
   return (
     <Layout className="min-h-screen">
       {/* Sidebar */}
-      <Sider width={'18%'} className="bg-white">
+      <Sider width={"18%"} className="bg-white">
         <div className="h-16 flex items-center justify-center">
           <img
             src="/listaro_logo.svg"
@@ -68,10 +95,14 @@ const DashboardLayout = () => {
         </div>
 
         {/* Render Menu items dynamically */}
-        <Menu theme="light"  mode="inline" defaultSelectedKeys={["1"]}>
+        <Menu theme="light" mode="inline" defaultSelectedKeys={["1"]}>
           {menuItems.map((item) => (
-            <Menu.Item key={item.key} icon={item.icon}>
-              <Link to={item.path}>{item.label}</Link>
+            <Menu.Item
+              key={item.key}
+              icon={item.icon}
+              onClick={item.onClick}
+            >
+              {item.path ? <Link to={item.path}>{item.label}</Link> : item.label}
             </Menu.Item>
           ))}
         </Menu>
