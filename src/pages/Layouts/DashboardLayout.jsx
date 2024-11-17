@@ -124,7 +124,7 @@ const DashboardLayout = () => {
                 0 credits
               </Text>
             </div>
-            <Button
+            <Button onClick={() => navigate("/pricing")}
               type="primary"
               className="bg-purple-700 border-purple-700 hover:bg-purple-800"
             >
