@@ -1,7 +1,9 @@
 import React from "react";
 import { Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const HeroSection = () => {
+  const navigation = useNavigate()
   return (
     <div className="flex flex-col md:flex-row items-center justify-between  bg-gradient-to-b from-gray-50 via-white to-gray-100 text-gray-900">
       {/* Left Content */}
@@ -25,9 +27,9 @@ const HeroSection = () => {
           Generate high-quality e-commerce product content in seconds with
           precision and speed.
         </p>
-        <Button
+        <Button onClick={() => navigation('/auth')}
           type="primary"
-          className="mt-6 bg-purple-800 py-5 text-white px-8  rounded-lg shadow-md hover:opacity-90 transition-all transform hover:scale-105"
+          className="mt-6 font-bold bg-purple-800 py-5 text-white px-8  rounded-lg shadow-md hover:opacity-90 transition-all transform hover:scale-105"
         >
           Get Started
         </Button>

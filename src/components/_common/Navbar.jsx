@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Menu, Layout, Button, Drawer } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { MenuOutlined } from "@ant-design/icons";
 
 const { Header } = Layout;
 
 const Navbar = () => {
   // Navigation items
+const navigation = useNavigate()
   const navItems = [
     { key: "home", label: "Home", path: "/" },
     { key: "pricing", label: "Pricing", path: "/pricing" },
@@ -119,6 +120,7 @@ const Navbar = () => {
         }}
       >
         <Button
+        onClick={() => navigation('/auth')}
           type="primary"
           className="bg-purple-700"
           style={{
