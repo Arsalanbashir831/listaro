@@ -22,3 +22,6 @@
   .custom-steps .ant-steps-item-title {
     color: black !important; /* Step title color */
   }
+body{
+  background-color: #f3f3f3;
+}

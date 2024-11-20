@@ -20,17 +20,19 @@ const Navbar = () => {
   };
 
   return (
-    <Header
+    <Header 
       style={{
-        position: "fixed",
+        // position: "fixed",
+      
         zIndex: 1,
         width: "100%",
-        background: "#fff",
+        background: "white",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         padding: "0 20px",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        
+        // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
       {/* Logo */}
@@ -42,7 +44,7 @@ const Navbar = () => {
           fontWeight: "bold",
         }}
       >
-        <img src="/listaro_logo.svg" width={120} alt="Logo" />
+        <img src="/listaro_logo.svg" width={150} alt="Logo" />
       </div>
 
       {/* Desktop Navigation */}
@@ -80,8 +82,8 @@ const Navbar = () => {
 
       {/* Drawer for Mobile Menu */}
       <Drawer
-        title="Listaro"
-        placement="right"
+        // title="Listaro"
+        placement="left"
         onClose={toggleDrawer}
         open={isDrawerOpen}
         bodyStyle={{ padding: "0" }}

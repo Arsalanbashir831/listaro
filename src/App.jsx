@@ -12,6 +12,9 @@ import UserSubscription from "./pages/Dashboard/UserSubscription";
 import PricingLayout from "./pages/Layouts/PricingLayout";
 import LandingPageLayout from "./pages/Layouts/LandingPageLayout";
 import Navbar from "./components/_common/Navbar";
+import { Flex } from "antd";
+import Footer from "./components/_common/Footer";
+
 
 const AppWithNavbar = ({ children }) => {
   const location = useLocation();
@@ -28,6 +31,7 @@ const AppWithNavbar = ({ children }) => {
     <>
       {!isExcluded && <Navbar />} {/* Render Navbar conditionally */}
       {children}
+      {!isExcluded && <Footer/>}
     </>
   );
 };
@@ -35,7 +39,11 @@ const AppWithNavbar = ({ children }) => {
 const App = () => {
   return (
     <Router>
+    
+  
       <AppWithNavbar>
+    
+   
         <Routes>
           <Route path="/auth" element={<Authentication />} />
           <Route path="/addListing" element={<AddListingLayout />} />
@@ -52,6 +60,7 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </AppWithNavbar>
+       
     </Router>
   );
 };
