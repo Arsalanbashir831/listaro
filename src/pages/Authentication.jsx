@@ -9,7 +9,7 @@ const { Content } = Layout;
 const { Title, Text } = Typography;
 
 const Authentication = () => {
-  const [isComponent, setComponent] = useState("login");
+  const [isComponent, setComponent] = useState("signup");
 
   return (
     <Layout
@@ -95,7 +95,7 @@ const Authentication = () => {
         >
           <Content
             style={{
-              maxWidth: "400px",
+           
               width: "100%",
               padding: "40px",
               background: "white",

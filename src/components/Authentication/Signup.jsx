@@ -1,26 +1,99 @@
-import {
-  GoogleOutlined,
- 
-} from "@ant-design/icons";
+import { GoogleOutlined } from "@ant-design/icons";
 import { Input, Button, Space, Typography } from "antd";
-import { useNavigation , useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
   const { Title, Text } = Typography;
-const navigation = useNavigate();
+  const navigation = useNavigate();
+
   return (
-    <>
-      <Title level={2} style={{ textAlign: "center" }}>
-        Signup
+    <div className="p-6 bg-gradient-to-br from-gray-50 to-white shadow-lg rounded-lg max-w-md mx-auto">
+      <Title
+        level={2}
+        style={{
+          textAlign: "center",
+          color: "#6b46c1",
+          fontWeight: "bold",
+        }}
+      >
+        Create Your Account
       </Title>
 
-      <Space direction="vertical" size="middle" style={{ width: "100%" }}>
-        <Input placeholder="Username" size="large" />
-        <Input placeholder="Email" size="large" type="email" />
-        <Input.Password placeholder="Password" size="large" />
-        <Input.Password placeholder="Confirm Password" size="large" />
+      <Text
+        style={{
+          display: "block",
+          textAlign: "center",
+          color: "gray",
+          marginBottom: "24px",
+        }}
+      >
+        Sign up to access exclusive features
+      </Text>
 
-        <Button onClick={()=> navigation('/dashboard')} className="bg-purple-700" type="primary" size="large" block style={{ marginTop: "16px" }}>
+      <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        {/* Username Input */}
+        <Input
+          placeholder="Username"
+          size="large"
+          className="rounded-lg"
+          style={{
+            padding: "12px",
+            borderColor: "#d9d9d9",
+            backgroundColor: "#f8f8fc",
+          }}
+        />
+
+        {/* Email Input */}
+        <Input
+          placeholder="Email Address"
+          size="large"
+          type="email"
+          className="rounded-lg"
+          style={{
+            padding: "12px",
+            borderColor: "#d9d9d9",
+            backgroundColor: "#f8f8fc",
+          }}
+        />
+
+        {/* Password Input */}
+        <Input.Password
+          placeholder="Password"
+          size="large"
+          className="rounded-lg"
+          style={{
+            padding: "12px",
+            borderColor: "#d9d9d9",
+            backgroundColor: "#f8f8fc",
+          }}
+        />
+
+        {/* Confirm Password Input */}
+        <Input.Password
+          placeholder="Confirm Password"
+          size="large"
+          className="rounded-lg"
+          style={{
+            padding: "12px",
+            borderColor: "#d9d9d9",
+            backgroundColor: "#f8f8fc",
+          }}
+        />
+
+        {/* Signup Button */}
+        <Button
+          onClick={() => navigation("/dashboard")}
+          type="primary"
+          size="large"
+          block
+          className="rounded-lg"
+          style={{
+            backgroundColor: "#6b46c1",
+            borderColor: "#6b46c1",
+            fontWeight: "normal",
+            letterSpacing: "0.5px",
+          }}
+        >
           Signup
         </Button>
       </Space>
@@ -33,34 +106,40 @@ const navigation = useNavigate();
           color: "gray",
         }}
       >
-        or signup with
+        or sign up with
       </Text>
 
       <Space
         direction="vertical"
         size="middle"
-        style={{ width: "100%", marginTop: "16px" }}
+        style={{
+          width: "100%",
+          marginTop: "16px",
+        }}
       >
+        {/* Google Signup Button */}
         <Button
           type="default"
           icon={<GoogleOutlined />}
           size="large"
           block
-          variant="filled"
+          className="rounded-lg"
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "white",
-            background:'#e30513',
+            fontWeight: "bold",
+            color: "#fff",
+            background: "#e30513",
             borderColor: "#db4437",
           }}
         >
-         Continue with Google
+          Continue with Google
         </Button>
-       
       </Space>
-    </>
+
+     
+    </div>
   );
 };
 
