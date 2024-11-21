@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Button, Input, Space, Tag, Typography, Modal } from "antd";
+import { Table, Button, Input, Space, Tag, Typography, Modal, Switch } from "antd";
 import { EditOutlined, CheckOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
@@ -10,21 +10,24 @@ const Subscriptions = () => {
     {
       key: "1",
       name: "Free Plan",
-      price: "$0",
+      monthlyPrice: "$0",
+      yearlyPrice: "$0",
       features: ["Basic Support", "Limited Access", "1 Project"],
       editable: false,
     },
     {
       key: "2",
       name: "Pro Plan",
-      price: "$24 / month",
+      monthlyPrice: "$24 / month",
+      yearlyPrice: "$240 / year",
       features: ["Priority Support", "Unlimited Projects", "Custom Domains"],
       editable: false,
     },
     {
       key: "3",
       name: "Business Plan",
-      price: "$99 / month",
+      monthlyPrice: "$99 / month",
+      yearlyPrice: "$990 / year",
       features: [
         "24/7 Support",
         "Dedicated Manager",
@@ -35,7 +38,8 @@ const Subscriptions = () => {
     {
       key: "4",
       name: "Enterprise Plan",
-      price: "Custom Pricing",
+      monthlyPrice: "Custom Pricing",
+      yearlyPrice: "Custom Pricing",
       features: [
         "Dedicated Servers",
         "Advanced Security",
@@ -45,7 +49,7 @@ const Subscriptions = () => {
     },
   ]);
 
-  // State for editing a subscription
+  const [isYearly, setIsYearly] = useState(false); // Toggle for monthly/yearly pricing
   const [editingKey, setEditingKey] = useState(null);
   const [editedPrice, setEditedPrice] = useState("");
   const [editedFeatures, setEditedFeatures] = useState([]);
@@ -53,7 +57,7 @@ const Subscriptions = () => {
 
   const handleEdit = (record) => {
     setEditingKey(record.key);
-    setEditedPrice(record.price);
+    setEditedPrice(isYearly ? record.yearlyPrice : record.monthlyPrice);
     setEditedFeatures(record.features.join("\n"));
     setIsModalVisible(true);
   };
@@ -63,7 +67,7 @@ const Subscriptions = () => {
       sub.key === editingKey
         ? {
             ...sub,
-            price: editedPrice,
+            [isYearly ? "yearlyPrice" : "monthlyPrice"]: editedPrice,
             features: editedFeatures.split("\n"),
           }
         : sub
@@ -90,8 +94,8 @@ const Subscriptions = () => {
       render: (text) => <span style={{ fontWeight: "bold" }}>{text}</span>,
     },
     {
-      title: "Price",
-      dataIndex: "price",
+      title: isYearly ? "Yearly Price" : "Monthly Price",
+      dataIndex: isYearly ? "yearlyPrice" : "monthlyPrice",
       key: "price",
       render: (text) => <Tag color="purple">{text}</Tag>,
     },
@@ -125,10 +129,23 @@ const Subscriptions = () => {
   ];
 
   return (
-    <div className="p-6 bg-gradient-to-br from-purple-50 to-white rounded-lg shadow-md">
-      <Title level={3} className="text-purple-800 mb-4">
-        Manage Subscriptions
-      </Title>
+    <div className="p-6 bg-gradient-to-br from-purple-50 to-white rounded-lg ">
+      <div className="flex items-center justify-between mb-4">
+       <h1 className="text-purple-800 font-semibold text-xl">Manage Subscription</h1>
+
+        {/* Toggle between Monthly and Yearly */}
+        <Space>
+          <span>Monthly</span>
+          <Switch
+            checked={isYearly}
+            onChange={() => setIsYearly(!isYearly)}
+            style={{
+              backgroundColor: isYearly ? "#6b46c1" : "#d9d9d9",
+            }}
+          />
+          <span>Yearly</span>
+        </Space>
+      </div>
 
       {/* Table */}
       <Table
@@ -143,7 +160,7 @@ const Subscriptions = () => {
 
       {/* Modal for Editing Subscription */}
       <Modal
-        title="Edit Subscription"
+        title={`Edit Subscription (${isYearly ? "Yearly" : "Monthly"})`}
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[

@@ -19,10 +19,11 @@ import AdminLogin from "./components/Authentication/AdminLogin";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import Users from "./pages/Admin/Users";
 import Subscriptions from "./pages/Admin/Subscriptions";
+import ContactUs from "./pages/ContactUs";
 
 const AppWithNavbar = ({ children }) => {
   const location = useLocation();
-  const excludedRoutes = ["/auth", "/addListing", "/admin-auth", "/admin"];
+  const excludedRoutes = ["/auth", "/addListing", "/admin-auth", "/admin",'/dashboard'];
   const isExcluded = excludedRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
@@ -43,6 +44,7 @@ const App = () => {
         <Routes>
           <Route path="/auth" element={<Authentication />} />
           <Route path="/admin-auth" element={<AdminLogin />} />
+          <Route path="/contact" element={<ContactUs />} />
           <Route path="/" element={<LandingPageLayout />} />
           <Route path="/pricing" element={<PricingLayout />} />
           <Route path="/dashboard" element={<DashboardLayout />}>

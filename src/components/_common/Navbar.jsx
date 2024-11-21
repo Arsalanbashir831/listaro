@@ -11,7 +11,7 @@ const navigation = useNavigate()
   const navItems = [
     { key: "home", label: "Home", path: "/" },
     { key: "pricing", label: "Pricing", path: "/pricing" },
-    { key: "contact", label: "Contact Us", path: "/contact-us" },
+    { key: "contact", label: "Contact Us", path: "/contact" },
   ];
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
