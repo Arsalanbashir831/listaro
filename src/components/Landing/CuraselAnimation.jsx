@@ -15,7 +15,7 @@ const CarouselAnimation = () => {
   ]; 
 
   return (
-    <div className="w-full overflow-hidden bg-gray-100 py-6">
+    <div className="w-full overflow-hidden  py-6">
       <motion.div
         className="flex gap-8"
         animate={{ x: [0, -1000] }} // Adjust distance based on logo width

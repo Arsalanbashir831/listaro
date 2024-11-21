@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const HeroSection = () => {
   const navigation = useNavigate()
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between  bg-gradient-to-b from-gray-50 via-white to-gray-100 text-gray-900">
+    <div className="flex flex-col md:flex-row items-center justify-between   text-gray-900">
       {/* Left Content */}
       <div className="max-w-md md:max-w-lg space-y-6">
         <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
