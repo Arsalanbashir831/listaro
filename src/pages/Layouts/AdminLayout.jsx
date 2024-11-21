@@ -6,7 +6,7 @@ import {
   DownOutlined,
 } from "@ant-design/icons";
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import { FaFileImport, FaKeycdn } from "react-icons/fa6";
+import { FaFileImport, FaKeycdn, FaMoneyBillWave, FaUser } from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
 import { RiMoneyEuroCircleFill } from "react-icons/ri";
 
@@ -39,20 +39,20 @@ const AdminLayout = () => {
       key: "1",
       icon: <DashboardOutlined />,
       label: "Dashboard",
-      path: "/admin/dashboard",
+      path: "/admin",
     },
-    // {
-    //   key: "2",
-    //   icon: <FaKeycdn />,
-    //   label: "Keyword Optimization",
-    //   path: "/dashboard/keyword-optimization",
-    // },
-    // {
-    //   key: "3",
-    //   icon: <IoSettingsSharp />,
-    //   label: "Settings",
-    //   path: "/dashboard/profile-settings",
-    // },
+    {
+      key: "2",
+      icon: <FaUser />,
+      label: "Users",
+      path: "/admin/users",
+    },
+    {
+      key: "3",
+      icon: <FaMoneyBillWave />,
+      label: "Subscriptions",
+      path: "/admin/subscriptions",
+    },
     // {
     //   key: "5",
     //   icon: <FaFileImport />,

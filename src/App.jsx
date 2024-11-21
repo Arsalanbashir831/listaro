@@ -17,6 +17,8 @@ import ImportCSV from "./pages/Dashboard/ImportCSV";
 import AdminLayout from "./pages/Layouts/AdminLayout";
 import AdminLogin from "./components/Authentication/AdminLogin";
 import AdminDashboard from "./pages/Admin/Dashboard";
+import Users from "./pages/Admin/Users";
+import Subscriptions from "./pages/Admin/Subscriptions";
 
 const AppWithNavbar = ({ children }) => {
   const location = useLocation();
@@ -55,6 +57,8 @@ const App = () => {
           <Route path="/addListing" element={<AddListingLayout />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="" element={<AdminDashboard />} />
+            <Route path="users" element={<Users />} />
+            <Route path="subscriptions" element={<Subscriptions />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
