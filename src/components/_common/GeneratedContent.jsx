@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { Typography, Divider, Image, Button, Tooltip, Input } from "antd";
-import { CopyOutlined, EditOutlined, CheckOutlined, DownloadOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  CopyOutlined,
+  EditOutlined,
+  CheckOutlined,
+  DownloadOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import Papa from "papaparse";
 
 const { Title, Text, Paragraph } = Typography;
 
-const GeneratedContent = ({ title = "Sample Product Title", description, images = [], price = 100 }) => {
+const GeneratedContent = ({
+  title = "Sample Product Title",
+  description,
+  images = [],
+  price = 100,
+}) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedPrice, setEditedPrice] = useState(price);
@@ -14,7 +25,8 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
   const [descriptionSections, setDescriptionSections] = useState([
     {
       title: "Overview",
-      content: "This is an ultra-modern, high-quality product designed to meet your needs and expectations.",
+      content:
+        "This is an ultra-modern, high-quality product designed to meet your needs and expectations.",
     },
     {
       title: "Features",
@@ -22,7 +34,8 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
     },
     {
       title: "Benefits",
-      content: "Experience improved productivity and satisfaction with this state-of-the-art product.",
+      content:
+        "Experience improved productivity and satisfaction with this state-of-the-art product.",
     },
     {
       title: "Specifications",
@@ -43,7 +56,7 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
   const downloadCSV = () => {
     const csvData = descriptionSections.map((section) => ({
       Section: section.title,
-      Content: section.content.replace(/\n/g, " "), // Replace newlines with spaces for CSV
+      Content: section.content.replace(/\n/g, " "),
     }));
 
     const csv = Papa.unparse(csvData);
@@ -55,11 +68,6 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
     link.download = `${editedTitle.replace(/\s+/g, "_")}_listing.csv`;
     link.click();
     URL.revokeObjectURL(url);
-  };
-
-  // Placeholder function for "Add to Listing"
-  const addToListing = () => {
-    alert("Item added to your listing!");
   };
 
   // Save edited section content
@@ -75,30 +83,40 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
     <div
       style={{
         background: "#fff",
-        padding: "20px",
+        padding: "16px",
         borderRadius: "8px",
-        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
         maxWidth: "800px",
         margin: "auto",
       }}
     >
       {/* Action Buttons */}
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "16px" }}>
+      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "12px" }}>
         <Button
           type="primary"
           icon={<DownloadOutlined />}
-          style={{ marginRight: "8px" }}
+          style={{
+            marginRight: "8px",
+            background: "#6b46c1",
+            border: "none",
+          }}
           onClick={downloadCSV}
         >
           Download CSV
         </Button>
-        <Button type="primary" icon={<PlusOutlined />} onClick={addToListing}>
+        <Button
+          type="primary"
+          icon={<PlusOutlined />}
+          style={{ background: "#6b46c1", border: "none" }}
+        >
           Add to Listing
         </Button>
       </div>
 
-      <Title level={4}>AI-Generated Product Listing</Title>
-      <Divider />
+      <Title level={4} style={{ marginBottom: "12px" }}>
+        AI-Generated Product Listing
+      </Title>
+      <Divider style={{ margin: "8px 0" }} />
 
       {/* Images Section */}
       {images.length > 0 ? (
@@ -108,9 +126,9 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
             src={URL.createObjectURL(image)}
             alt={`Uploaded Image ${index + 1}`}
             style={{
-              marginBottom: "16px",
-              borderRadius: "8px",
-              maxHeight: "200px",
+              marginBottom: "12px",
+              borderRadius: "6px",
+              maxHeight: "180px",
               objectFit: "cover",
             }}
           />
@@ -120,17 +138,19 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
           src="https://via.placeholder.com/400"
           alt="Dummy Product Image"
           style={{
-            marginBottom: "16px",
-            borderRadius: "8px",
-            maxHeight: "200px",
+            marginBottom: "12px",
+            borderRadius: "6px",
+            maxHeight: "180px",
             objectFit: "cover",
           }}
         />
       )}
 
       {/* Title Section */}
-      <Title level={5}>Product Title</Title>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
+      <Title level={5} style={{ marginBottom: "8px" }}>
+        Product Title
+      </Title>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
         {isEditingTitle ? (
           <Input
             value={editedTitle}
@@ -138,25 +158,23 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
             style={{ marginRight: "8px", flex: 1 }}
           />
         ) : (
-          <Paragraph style={{ fontSize: "16px", fontWeight: "bold", flex: 1 }}>{editedTitle}</Paragraph>
+          <Paragraph style={{ fontSize: "14px", fontWeight: "bold", flex: 1 }}>
+            {editedTitle}
+          </Paragraph>
         )}
         <Button
           shape="circle"
           icon={isEditingTitle ? <CheckOutlined /> : <EditOutlined />}
-          onClick={() => {
-            if (isEditingTitle) {
-              setIsEditingTitle(false);
-            } else {
-              setIsEditingTitle(true);
-            }
-          }}
+          onClick={() => setIsEditingTitle(!isEditingTitle)}
         />
       </div>
-      <Divider />
+      <Divider style={{ margin: "8px 0" }} />
 
       {/* Price Section */}
-      <Title level={5}>Price (USD)</Title>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: "16px" }}>
+      <Title level={5} style={{ marginBottom: "8px" }}>
+        Price (USD)
+      </Title>
+      <div style={{ display: "flex", alignItems: "center", marginBottom: "12px" }}>
         {isEditingPrice ? (
           <Input
             value={editedPrice}
@@ -165,26 +183,24 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
             type="number"
           />
         ) : (
-          <Paragraph style={{ fontSize: "16px", fontWeight: "bold", flex: 1 }}>${editedPrice}</Paragraph>
+          <Paragraph style={{ fontSize: "14px", fontWeight: "bold", flex: 1 }}>
+            ${editedPrice}
+          </Paragraph>
         )}
         <Button
           shape="circle"
           icon={isEditingPrice ? <CheckOutlined /> : <EditOutlined />}
-          onClick={() => {
-            if (isEditingPrice) {
-              setIsEditingPrice(false);
-            } else {
-              setIsEditingPrice(true);
-            }
-          }}
+          onClick={() => setIsEditingPrice(!isEditingPrice)}
         />
       </div>
-      <Divider />
+      <Divider style={{ margin: "8px 0" }} />
 
       {/* Description Section */}
-      <Title level={5}>Description</Title>
+      <Title level={5} style={{ marginBottom: "8px" }}>
+        Description
+      </Title>
       {descriptionSections.map((section, index) => (
-        <div key={index} style={{ marginBottom: "16px" }}>
+        <div key={index} style={{ marginBottom: "12px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Text strong style={{ fontSize: "14px" }}>
               {section.title}
@@ -195,7 +211,7 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
                   shape="circle"
                   icon={<CopyOutlined />}
                   size="small"
-                  style={{ marginRight: "8px" }}
+                  style={{ marginRight: "6px" }}
                   onClick={() => copyToClipboard(section.content)}
                 />
               </Tooltip>
@@ -215,12 +231,16 @@ const GeneratedContent = ({ title = "Sample Product Title", description, images 
           {editingSectionIndex === index ? (
             <div style={{ marginTop: "8px" }}>
               <Input.TextArea
-                rows={4}
+                rows={3}
                 value={editedSectionContent}
                 onChange={(e) => setEditedSectionContent(e.target.value)}
                 style={{ marginBottom: "8px" }}
               />
-              <Button type="primary" onClick={saveEditedSection} style={{ marginRight: "8px" }}>
+              <Button
+                type="primary"
+                onClick={saveEditedSection}
+                style={{ marginRight: "8px", background: "#6b46c1", border: "none" }}
+              >
                 Save
               </Button>
               <Button onClick={() => setEditingSectionIndex(null)}>Cancel</Button>

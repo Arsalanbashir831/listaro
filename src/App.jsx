@@ -14,6 +14,7 @@ import LandingPageLayout from "./pages/Layouts/LandingPageLayout";
 import Navbar from "./components/_common/Navbar";
 import { Flex } from "antd";
 import Footer from "./components/_common/Footer";
+import ImportCSV from "./pages/Dashboard/ImportCSV";
 
 
 const AppWithNavbar = ({ children }) => {
@@ -56,6 +57,7 @@ const App = () => {
             <Route path="/dashboard/profile" element={<Profile />} />
             <Route path="/dashboard/profile-settings" element={<ProfileSettings />} />
             <Route path="/dashboard/user-subscription" element={<UserSubscription />} />
+            <Route path="/dashboard/import-products" element={<ImportCSV />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

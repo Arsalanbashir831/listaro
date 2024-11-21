@@ -6,6 +6,8 @@ import AIKeywordGenerationSection from '../../components/Landing/AIKeywordGenera
 import AIListingSection from '../../components/Landing/AIListingSection';
 import Testimonial from '../../components/Landing/Testimonial';
 
+import ImportExistingProducts from '../../components/Landing/ImportExistingProducts';
+
 const LandingPageLayout = () => {
   return (
     <div className="bg-gray-50">
@@ -25,6 +27,9 @@ const LandingPageLayout = () => {
         </div>
         <div className="mt-16">
           <AIListingSection/>
+        </div>
+        <div className="mt-16">
+          <ImportExistingProducts/>
         </div>
         <div className="mt-16">
           <Testimonial/>

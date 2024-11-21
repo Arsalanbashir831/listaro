@@ -7,7 +7,7 @@ const AIListingSection = () => {
         {/* Left Content */}
         <div className="w-full md:w-1/2 text-center md:text-left">
           <h2 className="text-4xl text-left md:text-5xl font-extrabold text-gray-900 mb-6">
-            AI-Driven Content Generation
+            AI-Driven Product Listing
           </h2>
           <p className="text-lg md:text-xl text-left text-gray-700 mb-6 leading-relaxed">
             Generate high-quality, platform-specific product listings for your
@@ -30,7 +30,7 @@ const AIListingSection = () => {
         <div className="w-full md:w-1/2">
           <div className="relative">
             <img
-              src="/dashboard.png" // Replace with the actual image URL
+              src="/listing_1.png" // Replace with the actual image URL
               alt="AI Content Generation"
               className="w-full h-auto rounded-lg shadow-xl transform hover:scale-105 transition-transform duration-500"
             />

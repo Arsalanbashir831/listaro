@@ -6,7 +6,7 @@ import {
   DownOutlined,
 } from "@ant-design/icons";
 import { Outlet, Link, useNavigate } from "react-router-dom";
-import { FaKeycdn } from "react-icons/fa6";
+import { FaFileImport, FaKeycdn } from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
 import { RiMoneyEuroCircleFill } from "react-icons/ri";
 
@@ -54,11 +54,18 @@ const DashboardLayout = () => {
       path: "/dashboard/profile-settings",
     },
     {
+      key: "5",
+      icon: <FaFileImport />,
+      label: "Import Products",
+      path: "/dashboard/import-products",
+    },
+    {
       key: "4",
       icon: <RiMoneyEuroCircleFill />,
       label: "Subscription",
       path: "/dashboard/user-subscription",
     },
+    
     {
       key: "7",
       icon: <LogoutOutlined />,

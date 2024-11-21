@@ -10,18 +10,13 @@ const PricingLayout = () => {
       title: "Free",
       price: "$0",
       description: "Ideal for hobby projects, prototypes, and testing.",
-      features: [
-        "5 code copies",
-        "20 code inspects",
-        "Hosting: 5 screens, 1 project",
-      ],
+      features: ["5 code copies", "20 code inspects", "Hosting: 5 screens, 1 project"],
       buttonLabel: "Current Plan",
     },
     {
       title: "Pro",
       price: "$24 / month",
-      description:
-        "Ideal for exporting code for full flows and website publishing.",
+      description: "Ideal for exporting code for full flows and website publishing.",
       features: [
         "5,000 code exports",
         "Unlimited code inspects",
@@ -38,7 +33,7 @@ const PricingLayout = () => {
     {
       title: "Business",
       price: "$150 / month",
-      description: "Ideal for teams building at scale and free integration",
+      description: "Ideal for teams building at scale and free integration.",
       features: [
         "50,000 code exports",
         "Unlimited code inspects",
@@ -53,8 +48,7 @@ const PricingLayout = () => {
     {
       title: "Enterprise",
       price: "Custom",
-      description:
-        "Ideal for mature teams needing secure and scalable solutions.",
+      description: "Ideal for mature teams needing secure and scalable solutions.",
       features: [
         "Unlimited code exports",
         "Code reuse for Frontier",
@@ -70,12 +64,8 @@ const PricingLayout = () => {
   ];
 
   return (
-    <div style={{ padding: "40px", background: "#f4f4f8" }}>
-      {/* Title Section */}
-      <Title level={2} style={{ textAlign: "center", color: "#6a0dad" }} className="mt-10">
-        Choose Your Plan
-      </Title>
-      <Divider style={{ borderColor: "#6a0dad" }} />
+    <div style={{ padding: "40px 0", background: "#f4f4f8" }}>
+  
 
       {/* Monthly/Annual Toggle */}
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
@@ -90,7 +80,11 @@ const PricingLayout = () => {
       </div>
 
       {/* Pricing Cards */}
-      <Row gutter={24} justify="center">
+      <Row
+        gutter={[24, 24]}
+        justify="center"
+        style={{ maxWidth: "1200px", margin: "0 auto" }}
+      >
         {plans.map((plan, index) => (
           <Col key={index} xs={24} sm={12} md={6}>
             <PricePlanCard {...plan} />
