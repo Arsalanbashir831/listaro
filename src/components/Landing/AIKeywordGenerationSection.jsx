@@ -16,21 +16,19 @@ const AIKeywordGenerationSection = () => {
         {/* Right Content */}
         <div className="w-full md:w-1/2">
           <h2 className="text-4xl font-extrabold text-gray-900 mb-6">
-            AI-Powered Keyword Generation
+          Boost Visibility with Intelligent Keywords
           </h2>
           <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-            Unlock the power of AI to generate optimized keywords for your
-            products. Whether you’re targeting Google, Amazon, or any e-commerce
-            platform, our intelligent system provides precise and high-performing
-            keyword suggestions tailored to your needs.
+          Supercharge your product visibility with AI-generated, platform-specific keywords. Unlock high-performing suggestions tailored to your audience, marketplace, and industry.
+
           </p>
           <ul className="list-disc pl-5 text-gray-600 mb-6">
-            <li>Generate platform-specific keywords effortlessly</li>
-            <li>Boost product visibility and ranking</li>
-            <li>Save time with AI-automated keyword research</li>
+            <li>Rank higher with search-optimized keyword recommendations.</li>
+            <li>Save hours on manual keyword research with AI automation</li>
+       
           </ul>
           <button className="bg-purple-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all">
-            Use AI Keyword Generator
+          Try the AI Keyword Generator
           </button>
         </div>
       </div>

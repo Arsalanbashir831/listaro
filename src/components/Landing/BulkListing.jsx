@@ -7,15 +7,15 @@ const BulkListing = () => {
         {/* Left Content */}
         <div className="w-full md:w-1/2 text-center md:text-left">
           <h2 className="text-4xl text-left md:text-5xl font-extrabold text-gray-900 mb-6">
-         Bulk Listing
+          Save Time with Bulk Actions
           </h2>
           <p className="text-lg md:text-xl text-left text-gray-700 mb-6 leading-relaxed">
-          Effortlessly create, manage, and optimize product listings for multiple e-commerce platforms with our powerful AI-driven solution. Whether you're listing on Amazon, eBay, Shopify, or Walmart, our bulk listing feature saves you time, enhances accuracy, and ensures your products shine in a competitive marketplace.
+          Manage multiple listings simultaneously with our bulk upload and editing capabilities. Whether you're launching new products or updating existing ones, our tool handles it with efficiency and precision
           </p>
           <ul className="list-disc pl-5 text-left text-gray-700 mb-8 space-y-3">
-            <li>Upload multiple products at once and save hours of manual work.</li>
-            <li>Tailor your listings to meet the unique requirements of Amazon, eBay, Shopify, and more.</li>
-            <li>Generate keyword-rich descriptions to maximize visibility and drive more sales.</li>
+            <li>Upload hundreds of listings at once.</li>
+            <li>Streamline updates across marketplaces with a single click</li>
+           
           </ul>
           <div className='text-left'>
           <button className="  bg-purple-800 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:from-blue-600 hover:to-green-600 transform hover:scale-105 transition-transform duration-300">

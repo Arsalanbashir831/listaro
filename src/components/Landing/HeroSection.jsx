@@ -9,23 +9,23 @@ const HeroSection = () => {
       {/* Left Content */}
       <div className="max-w-md md:max-w-lg space-y-6">
         <h1 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
-          The Fastest and Easiest way to{" "}
+          The Fastest way to{" "}
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-500 to-teal-400">
-            Create Content
+            Create Winning 
           </span>{" "}
-          that{" "}
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-400">
-            Sells More
-          </span>{" "}
-          and{" "}
           <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-400">
-            Ranks Higher
+          Listings
           </span>
+          {" "}that{" "}
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-indigo-400">
+            Sell More
+          </span>{" "}
+        
+         
         </h1>
         <p className="text-gray-600 text-lg leading-relaxed">
-          Top brands use Describely to eliminate content backlog using AI.
-          Generate high-quality e-commerce product content in seconds with
-          precision and speed.
+        Leverage the power of AI to simplify your e-commerce workflows. Generate optimized product titles, descriptions, and keywords that rank higher and convert better—all in seconds.
+
         </p>
         <Button onClick={() => navigation('/auth')}
           type="primary"

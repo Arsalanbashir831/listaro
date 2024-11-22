@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 const testimonials = [
   {
     quote:
-      "This AI tool transformed the way I manage my e-commerce platform. The keyword generation and content suggestions are simply outstanding!",
+      "I’ve saved countless hours on listing creation. This AI-powered tool is a must-have for every seller!",
     name: 'John Doe',
     position: 'E-commerce Specialist',
     image: 'https://via.placeholder.com/100',
@@ -18,7 +18,7 @@ const testimonials = [
   },
   {
     quote:
-      "As a product manager, I can't imagine going back to manual processes. This tool is a game-changer for content generation.",
+      "This tool transformed my e-commerce workflow. From keyword optimization to creating product descriptions, it’s a game-changer",
     name: 'Michael Johnson',
     position: 'Product Manager',
     image: 'https://via.placeholder.com/100',
