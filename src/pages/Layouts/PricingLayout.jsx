@@ -26,7 +26,7 @@ const PricingLayout = () => {
         "Email Support",
       ],
       buttonLabel: "Choose Plan",
-      color: "purple",
+     
     },
     {
       title: "Pro",
@@ -66,7 +66,7 @@ const PricingLayout = () => {
         "Priority Email & Video Support",
       ],
       buttonLabel: "Choose Plan",
-      color: "orange",
+    
     },
     {
       title: "Enterprise",
@@ -86,7 +86,7 @@ const PricingLayout = () => {
         "Dedicated Account Manager",
       ],
       buttonLabel: "Choose Plan",
-      color:'green'
+     
     },
   ];
 

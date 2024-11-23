@@ -2,18 +2,33 @@ import React from "react";
 import { Card, Button, Typography, Divider } from "antd";
 import { CheckCircleOutlined } from "@ant-design/icons";
 
-const PricePlanCard = ({ title, price, description, features, buttonLabel, popular ,color}) => {
+const PricePlanCard = ({ title, price, description, features, buttonLabel, popular, color }) => {
   const { Title, Text } = Typography;
 
-  // Function to highlight features containing numbers
+  // Function to highlight only numbers in the feature (skip highlighting for "Standard" package)
+  const getHighlightedFeature = (feature) => {
+    const numberRegex = /\d+(?:,\d{3})*/g; // Matches numbers with optional commas (e.g., "1,000")
 
-
-  const getHighlightedFeature = (feature ) => {
-    const numberRegex = /\d+/; // Regex to check for numbers
-    if (numberRegex.test(feature) ) {
-      return <span style={{ color: 'purple', fontWeight: "bold" }}>{feature}</span>;
+    // Skip highlighting if the package is "Standard"
+    if (title === "Standard") {
+      return feature;
     }
-    return feature;
+
+    const parts = feature.split(numberRegex); // Split sentence by numbers
+    const matches = feature.match(numberRegex); // Extract numbers
+
+    return (
+      <>
+        {parts.map((part, index) => (
+          <React.Fragment key={index}>
+            {part}
+            {matches && matches[index] && (
+              <span style={{ color: "purple", fontWeight: "bold" , padding:'0px 2px'}}>{matches[index]}</span>
+            )}
+          </React.Fragment>
+        ))}
+      </>
+    );
   };
 
   return (
@@ -59,7 +74,6 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
           marginBottom: "16px",
           color: "#6a0dad",
           maxHeight: "40px",
-      
         }}
       >
         {description}
@@ -88,7 +102,7 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
         }}
       >
         {features.map((feature, index) => (
-          <li key={index} style={{ marginBottom: "8px", display: "flex", alignItems: "center" , fontSize:'11px' }}>
+          <li key={index} style={{ marginBottom: "8px", display: "flex", alignItems: "center", fontSize: "11px" }}>
             <CheckCircleOutlined style={{ color: "#6a0dad", marginRight: "8px" }} />
             {getHighlightedFeature(feature)}
           </li>
