@@ -63,7 +63,7 @@ const StepsInput = () => {
               type="primary"
               className="bg-purple-700"
               style={{ marginTop: 10 }}
-              onClick={generateKeywords}
+              onClick={()=>console.log("Generate Keywords")}
             >
               Generate
             </Button>
