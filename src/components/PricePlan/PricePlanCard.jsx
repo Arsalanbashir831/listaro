@@ -82,13 +82,13 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
       <ul
         style={{
           textAlign: "left",
-          paddingLeft: "10px",
+          paddingLeft: "0px",
           marginBottom: "16px",
           listStyle: "none",
         }}
       >
         {features.map((feature, index) => (
-          <li key={index} style={{ marginBottom: "8px", display: "flex", alignItems: "center" , fontSize:'10px' }}>
+          <li key={index} style={{ marginBottom: "8px", display: "flex", alignItems: "center" , fontSize:'11px' }}>
             <CheckCircleOutlined style={{ color: "#6a0dad", marginRight: "8px" }} />
             {getHighlightedFeature(feature)}
           </li>
