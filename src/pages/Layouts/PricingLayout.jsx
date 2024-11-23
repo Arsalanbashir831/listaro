@@ -83,7 +83,7 @@ const PricingLayout = () => {
         "Custom Brand Style",
         "Dedicated Account Manager",
       ],
-      buttonLabel: "Contact Us",
+      buttonLabel: "Choose Plan",
     },
   ];
 
