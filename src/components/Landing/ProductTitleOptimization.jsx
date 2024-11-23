@@ -28,7 +28,7 @@ const ProductTitleOptimization = () => {
           </ul>
           
           <button className="  bg-purple-800 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:from-blue-600 hover:to-green-600 transform hover:scale-105 transition-transform duration-300">
-            Import Your Products
+         Optimize Title Now
           </button>
         </div>
       </div>

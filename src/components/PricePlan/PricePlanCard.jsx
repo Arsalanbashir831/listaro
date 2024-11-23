@@ -43,11 +43,11 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
       </Title>
       <Text
         type="secondary"
-        style={{ display: "block", marginBottom: "16px", color: "#6a0dad" }}
+        style={{ display: "block", marginBottom: "16px", color: "#6a0dad" , maxHeight:'40px'}}
       >
         {description}
       </Text>
-      <Title level={2} style={{ color: "#6a0dad", marginBottom: "16px" }}>
+      <Title level={2} style={{ color: "#6a0dad", marginBottom: "16px", marginTop:'60px' }}>
         {price}
       </Title>
       <Button

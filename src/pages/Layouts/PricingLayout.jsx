@@ -6,7 +6,7 @@ const PricingLayout = () => {
   const { Text } = Typography;
 
   // State to manage billing cycle (monthly/annual)
-  const [isAnnual, setIsAnnual] = useState(false);
+  const [isAnnual, setIsAnnual] = useState(true);
 
   // Base plan prices
   const basePlans = [
@@ -89,11 +89,11 @@ const PricingLayout = () => {
 
   // Adjust prices based on billing cycle
   const plans = basePlans.map((plan) => {
-    const price = isAnnual ? plan.monthlyPrice * 12 * 0.8 : plan.monthlyPrice; // 20% discount for annual plans
+    const price = isAnnual ? (plan.monthlyPrice * 12 * 0.8 )/12: plan.monthlyPrice; // 20% discount for annual plans
     return {
       ...plan,
       price: isAnnual
-        ? `$${price.toFixed(0)} / year`
+        ? `$${price.toFixed(0)} / month`
         : `$${plan.monthlyPrice} / month`,
     };
   });
@@ -104,10 +104,15 @@ const PricingLayout = () => {
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <Text style={{ color: "#6a0dad" }}>Monthly</Text>
         <Switch
-          style={{ margin: "0 8px", backgroundColor: "#6a0dad" }}
-          checked={isAnnual}
-          onChange={() => setIsAnnual(!isAnnual)}
-        />
+        checked={isAnnual}
+        onChange={() => setIsAnnual(!isAnnual)}
+        // checkedChildren="On"
+        // unCheckedChildren="Off"
+        style={{
+          margin: "0 8px",
+          backgroundColor: isAnnual ? "#861bbf" : "gray", // Custom colors
+        }}
+      />
         <Text>
           Annual <span style={{ color: "#6a0dad" }}>20% off</span>
         </Text>

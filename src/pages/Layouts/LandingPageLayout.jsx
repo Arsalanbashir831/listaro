@@ -64,15 +64,7 @@ const LandingPageLayout = () => {
           <CarouselAnimation />
         </motion.div>
 
-        <motion.div
-          className="mt-16"
-          variants={fadeInVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <AIKeywordGenerationSection />
-        </motion.div>
+       
 
         <motion.div
           className="mt-16"
@@ -103,7 +95,6 @@ const LandingPageLayout = () => {
         >
           <AIDescriptionOptimization />
         </motion.div>
-
         <motion.div
           className="mt-16"
           variants={fadeInVariants}
@@ -111,8 +102,9 @@ const LandingPageLayout = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <ImportExistingProducts />
+          <AIKeywordGenerationSection />
         </motion.div>
+       
 
         <motion.div
           className="mt-16"
@@ -123,7 +115,15 @@ const LandingPageLayout = () => {
         >
           <BulkListing />
         </motion.div>
-
+        {/* <motion.div
+          className="mt-16"
+          variants={fadeInVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <ImportExistingProducts />
+        </motion.div> */}
         <motion.div
           className="mt-16"
           variants={fadeInVariants}
