@@ -2,13 +2,13 @@ import React from "react";
 import { Card, Button, Typography, Divider } from "antd";
 import { CheckCircleOutlined } from "@ant-design/icons";
 
-const PricePlanCard = ({ title, price, description, features, buttonLabel, popular }) => {
+const PricePlanCard = ({ title, price, description, features, buttonLabel, popular ,color}) => {
   const { Title, Text } = Typography;
 
   // Function to highlight features containing numbers
 
 
-  const getHighlightedFeature = (feature , index) => {
+  const getHighlightedFeature = (feature ) => {
     const numberRegex = /\d+/; // Regex to check for numbers
     if (numberRegex.test(feature) ) {
       return <span style={{ color: 'purple', fontWeight: "bold" }}>{feature}</span>;
@@ -59,6 +59,7 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
           marginBottom: "16px",
           color: "#6a0dad",
           maxHeight: "40px",
+      
         }}
       >
         {description}
@@ -87,9 +88,9 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
         }}
       >
         {features.map((feature, index) => (
-          <li key={index} style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}>
+          <li key={index} style={{ marginBottom: "8px", display: "flex", alignItems: "center" , fontSize:'10px' }}>
             <CheckCircleOutlined style={{ color: "#6a0dad", marginRight: "8px" }} />
-            {getHighlightedFeature(feature,index)}
+            {getHighlightedFeature(feature)}
           </li>
         ))}
       </ul>
