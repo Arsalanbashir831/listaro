@@ -5,6 +5,17 @@ import { CheckCircleOutlined } from "@ant-design/icons";
 const PricePlanCard = ({ title, price, description, features, buttonLabel, popular }) => {
   const { Title, Text } = Typography;
 
+  // Function to highlight features containing numbers
+
+
+  const getHighlightedFeature = (feature , index) => {
+    const numberRegex = /\d+/; // Regex to check for numbers
+    if (numberRegex.test(feature) ) {
+      return <span style={{ color: 'purple', fontWeight: "bold" }}>{feature}</span>;
+    }
+    return feature;
+  };
+
   return (
     <Card
       bordered={false}
@@ -43,11 +54,16 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
       </Title>
       <Text
         type="secondary"
-        style={{ display: "block", marginBottom: "16px", color: "#6a0dad" , maxHeight:'40px'}}
+        style={{
+          display: "block",
+          marginBottom: "16px",
+          color: "#6a0dad",
+          maxHeight: "40px",
+        }}
       >
         {description}
       </Text>
-      <Title level={2} style={{ color: "#6a0dad", marginBottom: "16px", marginTop:'60px' }}>
+      <Title level={2} style={{ color: "#6a0dad", marginBottom: "16px", marginTop: "60px" }}>
         {price}
       </Title>
       <Button
@@ -65,15 +81,15 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
       <ul
         style={{
           textAlign: "left",
-          paddingLeft: "20px",
+          paddingLeft: "10px",
           marginBottom: "16px",
           listStyle: "none",
         }}
       >
         {features.map((feature, index) => (
-          <li key={index} style={{ marginBottom: "8px" }}>
+          <li key={index} style={{ marginBottom: "8px", display: "flex", alignItems: "center" }}>
             <CheckCircleOutlined style={{ color: "#6a0dad", marginRight: "8px" }} />
-            {feature}
+            {getHighlightedFeature(feature,index)}
           </li>
         ))}
       </ul>
