@@ -1,10 +1,37 @@
 import { GoogleOutlined } from "@ant-design/icons";
-import { Input, Button, Space, Typography } from "antd";
+import { Input, Button, Space, Typography, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const Signup = () => {
   const { Title, Text } = Typography;
-  const navigation = useNavigate();
+  const { register } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const handleSignup = async () => {
+    if (!username || !email || !password || !confirmPassword) {
+      message.error("Please fill out all fields.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      message.error("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await register(username, email, password);
+      message.success("Signup successful! Redirecting...");
+    } catch (error) {
+      message.error(error.message || "Signup failed. Please try again.");
+    }
+  };
 
   return (
     <div className="p-6 bg-gradient-to-br from-gray-50 to-white shadow-lg rounded-lg max-w-md mx-auto">
@@ -35,6 +62,8 @@ const Signup = () => {
         <Input
           placeholder="Username"
           size="large"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="rounded-lg"
           style={{
             padding: "12px",
@@ -48,6 +77,8 @@ const Signup = () => {
           placeholder="Email Address"
           size="large"
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="rounded-lg"
           style={{
             padding: "12px",
@@ -60,6 +91,8 @@ const Signup = () => {
         <Input.Password
           placeholder="Password"
           size="large"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="rounded-lg"
           style={{
             padding: "12px",
@@ -72,6 +105,8 @@ const Signup = () => {
         <Input.Password
           placeholder="Confirm Password"
           size="large"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           className="rounded-lg"
           style={{
             padding: "12px",
@@ -82,7 +117,7 @@ const Signup = () => {
 
         {/* Signup Button */}
         <Button
-          onClick={() => navigation("/dashboard")}
+          onClick={handleSignup}
           type="primary"
           size="large"
           block
@@ -137,8 +172,6 @@ const Signup = () => {
           Continue with Google
         </Button>
       </Space>
-
-     
     </div>
   );
 };

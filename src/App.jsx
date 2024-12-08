@@ -20,6 +20,9 @@ import AdminDashboard from "./pages/Admin/Dashboard";
 import Users from "./pages/Admin/Users";
 import Subscriptions from "./pages/Admin/Subscriptions";
 import ContactUs from "./pages/ContactUs";
+import { AuthProvider } from "./context/AuthContext";
+import { RefreshProvider } from "./context/RefreshContext";
+
 
 const AppWithNavbar = ({ children }) => {
   const location = useLocation();
@@ -40,7 +43,9 @@ const AppWithNavbar = ({ children }) => {
 const App = () => {
   return (
     <Router>
+    <AuthProvider>
       <AppWithNavbar>
+      <RefreshProvider>
         <Routes>
           <Route path="/auth" element={<Authentication />} />
           <Route path="/admin-auth" element={<AdminLogin />} />
@@ -64,7 +69,10 @@ const App = () => {
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </RefreshProvider>
       </AppWithNavbar>
+      </AuthProvider>
+    
     </Router>
   );
 };

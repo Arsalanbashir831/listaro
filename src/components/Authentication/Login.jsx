@@ -1,11 +1,30 @@
 import { GoogleOutlined } from "@ant-design/icons";
-import { Input, Button, Space, Typography } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Input, Button, Space, Typography, message } from "antd";
+import { AuthContext } from "../../context/AuthContext";
+import { useContext, useState } from "react";
 
 const Login = () => {
   const { Title, Text } = Typography;
-  const navigation = useNavigate();
-  
+  const { login } = useContext(AuthContext);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      message.error("Please enter your email and password.");
+      return;
+    }
+
+    try {
+      await login(email, password);
+      message.success("Login successful!");
+    } catch (error) {
+      console.error("Login error:", error);
+      message.error(
+        error.message || "An unexpected error occurred. Please try again."
+      );
+    }
+  };
 
   return (
     <div className="p-6 bg-gradient-to-br from-gray-50 to-white shadow-lg rounded-lg max-w-md mx-auto">
@@ -37,6 +56,8 @@ const Login = () => {
           placeholder="Email Address"
           size="large"
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           className="rounded-lg"
           style={{
             padding: "12px",
@@ -49,6 +70,8 @@ const Login = () => {
         <Input.Password
           placeholder="Password"
           size="large"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           className="rounded-lg"
           style={{
             padding: "12px",
@@ -70,7 +93,7 @@ const Login = () => {
 
         {/* Login Button */}
         <Button
-          onClick={() => navigation("/dashboard")}
+          onClick={handleLogin}
           type="primary"
           size="large"
           block
@@ -125,8 +148,6 @@ const Login = () => {
           Continue with Google
         </Button>
       </Space>
-
-    
     </div>
   );
 };

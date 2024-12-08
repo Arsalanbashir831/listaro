@@ -9,7 +9,7 @@ const { Content } = Layout;
 const { Title, Text } = Typography;
 
 const Authentication = () => {
-  const [isComponent, setComponent] = useState("signup");
+  const [isComponent, setComponent] = useState("login");
 
   return (
     <Layout
