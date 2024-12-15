@@ -14,6 +14,7 @@
     "antd": "^5.22.1",
     "axios": "^1.7.9",
     "chart.js": "^4.4.6",
+    "file-saver": "^2.0.5",
     "framer-motion": "^11.11.17",
     "listaro": "file:",
     "papaparse": "^5.4.1",

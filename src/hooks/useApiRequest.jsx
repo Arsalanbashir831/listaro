@@ -42,7 +42,7 @@ export const useApiRequest = () => {
     } 
     
     finally {
-      setLoading(false); // Stop loading state
+      setLoading(false); 
     }
   };
 

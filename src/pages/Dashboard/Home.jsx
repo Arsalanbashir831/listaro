@@ -1,112 +1,181 @@
-import { useState } from "react";
-import { Table, Button, Dropdown, Menu, Space, Typography, Row, Col, Card, Tag, Input } from "antd";
-import { DownOutlined, PlusOutlined, SearchOutlined, DownloadOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import {
+  Table,
+  Button,
+  Dropdown,
+  Menu,
+  Space,
+  Typography,
+  Row,
+  Col,
+  Card,
+  Tag,
+  Input,
+  Select,
+  message,
+} from "antd";
+import {
+  DownOutlined,
+  PlusOutlined,
+  SearchOutlined,
+  DownloadOutlined,
+  EyeOutlined,
+  LineChartOutlined,
+  TagsOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
 import { FaChevronCircleDown, FaPlusCircle } from "react-icons/fa";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
+import { useApiRequest } from "../../hooks/useApiRequest";
 
 const { Title } = Typography;
+const { Option } = Select;
 
 const Home = () => {
   const navigate = useNavigate();
-  
-  // Dummy data for the table
-  const data = [
-    {
-      key: "1",
-      title: "Sample Product 1",
-      status: "Active",
-      price: "$20.00",
-    },
-    {
-      key: "2",
-      title: "Sample Product 2",
-      status: "Inactive",
-      price: "$15.00",
-    },
-    {
-      key: "3",
-      title: "Sample Product 3",
-      status: "Pending",
-      price: "$25.00",
-    },
-  ];
+  const [listing, setListing] = useState([]);
+  const [platforms, setPlatforms] = useState([]);
+  const [selectedPlatform, setSelectedPlatform] = useState("amazon");
+  const { makeApiRequest, loading } = useApiRequest();
 
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredData, setFilteredData] = useState(listing);
+  const [dynamicColumns, setDynamicColumns] = useState([]);
 
-  // Columns for the table
-  const columns = [
-    {
-      title: "Title",
-      dataIndex: "title",
-      key: "title",
-      render: (text) => <a>{text}</a>, // Make titles clickable
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      filters: [
-        { text: "Active", value: "Active" },
-        { text: "Inactive", value: "Inactive" },
-        { text: "Pending", value: "Pending" },
-      ],
-      onFilter: (value, record) => record.status.includes(value),
-      render: (status) => {
-        const color = status === "Active" ? "green" : status === "Inactive" ? "volcano" : "geekblue";
-        return <Tag color={color}>{status}</Tag>;
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const token = localStorage.getItem("accessToken");
+      try {
+        const response = await makeApiRequest("/products/", "GET", null, {
+          Authorization: `Bearer ${token}`,
+        });
+        if (response.success) {
+          setListing(response.data);
+
+          // Extract unique platforms dynamically
+          const uniquePlatforms = [
+            ...new Set(response.data.map((item) => item.platform)),
+          ];
+          setPlatforms(uniquePlatforms);
+
+          // Set default dynamic columns based on the first item
+          if (response.data.length > 0) {
+            generateColumns(response.data[0].attributes);
+          }
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        message.error("Failed to fetch products. Please try again.");
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const generateColumns = (attributes) => {
+    const attributeColumns = Object.keys(attributes).map((key) => ({
+      title: key.toUpperCase(),
+      dataIndex: ["attributes", key],
+      key,
+    }));
+
+    setDynamicColumns([
+      ...attributeColumns,
+      {
+        title: "Actions",
+        key: "actions",
+        render: (_, record) => (
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item
+                  key="view"
+                  onClick={() =>
+                    navigate("/dashboard/product-preview", {
+                      state: { product: record },
+                    })
+                  }
+                  icon={<EyeOutlined style={{ color: "#1890ff" }} />}
+                >
+                  Preview
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/product-optimization/${record.id}`
+                    )
+                  }
+                  key="aiOptimize"
+                  icon={<LineChartOutlined style={{ color: "#52c41a" }} />}
+                >
+                  AI Optimization
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() =>
+                    navigate(`/dashboard/keyword-optimization/${record.id}`)
+                  }
+                  key="keywords"
+                  icon={<TagsOutlined style={{ color: "#faad14" }} />}
+                >
+                  Keywords Optimization
+                </Menu.Item>
+                <Menu.Item
+                  onClick={() =>
+                    navigate("/dashboard/product-edit", {
+                      state: { product: record },
+                    })
+                  }
+                  key="edit"
+                  icon={<EditOutlined style={{ color: "#ffa940" }} />}
+                >
+                  Edit
+                </Menu.Item>
+                <Menu.Item
+                  key="delete"
+                  icon={<DeleteOutlined style={{ color: "#f5222d" }} />}
+                >
+                  Delete
+                </Menu.Item>
+              </Menu>
+            }
+          >
+            <Button type="text" className="text-purple-600 hover:text-purple-800">
+              Options <FaChevronCircleDown />
+            </Button>
+          </Dropdown>
+        ),
       },
-    },
-    {
-      title: "Price",
-      dataIndex: "price",
-      key: "price",
-    },
-    {
-      title: "Options",
-      key: "actions",
-      render: (_, record) => (
-        <Dropdown overlay={actionMenu}>
-          <Button type="default" className="text-purple-600 hover:text-purple-800">
-            Options <DownOutlined />
-          </Button>
-        </Dropdown>
-      ),
-    },
-  ];
-
-  // Dropdown menu for row actions
-  const actionMenu = (
-    <Menu>
-      <Menu.Item key="edit">Edit</Menu.Item>
-      <Menu.Item key="delete">Delete</Menu.Item>
-    </Menu>
-  );
-
-  // Create Listing Dropdown menu
-  const createListingMenu = (
-    <Menu>
-      <Menu.Item key="amazon">Amazon Seller Account</Menu.Item>
-      <Menu.Item key="ebay">Ebay Account</Menu.Item>
-      <Menu.Item key="walmart">Walmart Account</Menu.Item>
-    </Menu>
-  );
-
-  // Search functionality
-  const handleSearch = (e) => {
-    const value = e.target.value.toLowerCase();
-    setSearchText(value);
-    const filtered = data.filter((item) => item.title.toLowerCase().includes(value));
-    setFilteredData(filtered);
+    ]);
   };
 
-  // Download CSV functionality
+  useEffect(() => {
+    const filtered = listing.filter(
+      (item) =>
+        (item.platform === selectedPlatform)
+    );
+    setFilteredData(filtered);
+
+    // Update columns dynamically for the selected platform
+    if (filtered.length > 0) {
+      generateColumns(filtered[0].attributes);
+    }
+  }, [searchText, listing, selectedPlatform]);
+
+  const handlePlatformChange = (value) => {
+    setSelectedPlatform(value);
+  };
+
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
+  };
+
   const downloadCSV = () => {
     const csvData = filteredData.map((item) => ({
       Title: item.title,
-      Status: item.status,
+      Platform: item.platform,
       Price: item.price,
+      Attributes: JSON.stringify(item.attributes),
     }));
 
     const csv = Papa.unparse(csvData);
@@ -121,8 +190,7 @@ const Home = () => {
   };
 
   return (
-    <div className="p-6">
-      {/* Header Section */}
+    <div className="p-6 bg-gray-100 min-h-screen">
       <Row justify="space-between" align="middle" className="mb-6">
         <Col>
           <Title level={3} style={{ color: "#6a0dad" }}>
@@ -131,6 +199,18 @@ const Home = () => {
         </Col>
         <Col>
           <Space>
+            <Select
+              style={{ width: 200 }}
+              onChange={handlePlatformChange}
+              value={selectedPlatform}
+              placeholder="Select Platform"
+            >
+              {platforms.map((platform) => (
+                <Option key={platform} value={platform}>
+                  {platform}
+                </Option>
+              ))}
+            </Select>
             <Input
               placeholder="Search listings"
               prefix={<SearchOutlined />}
@@ -148,7 +228,7 @@ const Home = () => {
               Download CSV
             </Button>
             <Button
-              onClick={() => navigate("/addListing")}
+              onClick={() => navigate("/dashboard/addListing")}
               type="primary"
               icon={<FaPlusCircle />}
               className="bg-purple-700 border-purple-700 hover:bg-purple-800"
@@ -159,14 +239,16 @@ const Home = () => {
         </Col>
       </Row>
 
-      {/* Table Section */}
       <Card bordered={false} className="shadow-md">
-        <Table
-          columns={columns}
+        <Table className="overflow-x-scroll"
+          columns={dynamicColumns}
           dataSource={filteredData}
           pagination={{ pageSize: 5 }}
           bordered
-          rowClassName={(record, index) => (index % 2 === 0 ? "bg-purple-50" : "")}
+          rowClassName={(record, index) =>
+            index % 2 === 0 ? "bg-purple-50" : ""
+          }
+          loading={loading}
         />
       </Card>
     </div>

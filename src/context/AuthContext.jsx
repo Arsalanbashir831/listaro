@@ -103,7 +103,9 @@ export const AuthProvider = ({ children }) => {
 
         if (refreshResult.success) {
           const newAccessToken = refreshResult.data.access;
+          const newRefreshToken = refreshResult.data.refresh;
           localStorage.setItem("accessToken", newAccessToken);
+          localStorage.setItem("refreshToken", newRefreshToken);
           setAccessToken(newAccessToken);
           return true;
         } else {
@@ -115,7 +117,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    validateAndRefreshToken();
+    if(location.pathname !='/' && location.pathname != '/pricing' ){
+      validateAndRefreshToken();
+    }
+    if(location.pathname ==='/auth' && accessToken!=null ){
+      validateAndRefreshToken();
+    }
+    
+  
   }, [accessToken, navigate, location.pathname]);
 
   return (

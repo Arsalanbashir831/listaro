@@ -5,7 +5,7 @@ import NotFound from "./pages/NotFound";
 import KeywordOptimization from "./pages/Dashboard/KeywordOptimization";
 import ImageOptimization from "./pages/Dashboard/ImageOptimization";
 import DashboardLayout from "./pages/Layouts/DashboardLayout";
-import AddListingLayout from "./pages/Layouts/AddListingLayout";
+import AddListingLayout from "./pages/Dashboard/AddListingLayout";
 import Profile from "./pages/Dashboard/Profile";
 import ProfileSettings from "./pages/Dashboard/ProfileSettings";
 import UserSubscription from "./pages/Dashboard/UserSubscription";
@@ -22,11 +22,14 @@ import Subscriptions from "./pages/Admin/Subscriptions";
 import ContactUs from "./pages/ContactUs";
 import { AuthProvider } from "./context/AuthContext";
 import { RefreshProvider } from "./context/RefreshContext";
-
+import { Outlet } from "react-router-dom";
+import AIProductOptimization from "./pages/Dashboard/AIProductOptimization";
+import ProductPreview from "./pages/Dashboard/ProductPreview";
+import ProductEdit from "./pages/Dashboard/ProductEdit";
 
 const AppWithNavbar = ({ children }) => {
   const location = useLocation();
-  const excludedRoutes = ["/auth", "/addListing", "/admin-auth", "/admin",'/dashboard'];
+  const excludedRoutes = ["/auth", "/admin-auth", "/admin",'/dashboard'];
   const isExcluded = excludedRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
@@ -35,7 +38,7 @@ const AppWithNavbar = ({ children }) => {
     <>
       {!isExcluded && <Navbar />}
       {children}
-      {!isExcluded && <Footer />} 
+      {!isExcluded && <Footer />}
     </>
   );
 };
@@ -43,36 +46,38 @@ const AppWithNavbar = ({ children }) => {
 const App = () => {
   return (
     <Router>
-    <AuthProvider>
-      <AppWithNavbar>
-      <RefreshProvider>
-        <Routes>
-          <Route path="/auth" element={<Authentication />} />
-          <Route path="/admin-auth" element={<AdminLogin />} />
-          <Route path="/contact" element={<ContactUs />} />
-          <Route path="/" element={<LandingPageLayout />} />
-          <Route path="/pricing" element={<PricingLayout />} />
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route path="" element={<Home />} />
-            <Route path="keyword-optimization" element={<KeywordOptimization />} />
-            <Route path="image-optimization" element={<ImageOptimization />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="profile-settings" element={<ProfileSettings />} />
-            <Route path="user-subscription" element={<UserSubscription />} />
-            <Route path="import-products" element={<ImportCSV />} />
-          </Route>
-          <Route path="/addListing" element={<AddListingLayout />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route path="" element={<AdminDashboard />} />
-            <Route path="users" element={<Users />} />
-            <Route path="subscriptions" element={<Subscriptions />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        </RefreshProvider>
-      </AppWithNavbar>
+      <AuthProvider>
+        <AppWithNavbar>
+          <RefreshProvider>
+            <Routes>
+              <Route path="/auth" element={<Authentication />} />
+              <Route path="/admin-auth" element={<AdminLogin />} />
+              <Route path="/contact" element={<ContactUs />} />
+              <Route path="/" element={<LandingPageLayout />} />
+              <Route path="/pricing" element={<PricingLayout />} />
+              <Route path="/dashboard" element={<DashboardLayout />}>
+                <Route index element={<Home />} />
+                <Route path="keyword-optimization/:productId" element={<KeywordOptimization />} />
+                <Route path="product-optimization/:productId" element={<AIProductOptimization />} />
+                <Route path="product-preview" element={<ProductPreview />} />
+                <Route path="product-edit" element={<ProductEdit />} />
+                <Route path="image-optimization" element={<ImageOptimization />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="profile-settings" element={<ProfileSettings />} />
+                <Route path="user-subscription" element={<UserSubscription />} />
+                <Route path="import-products" element={<ImportCSV />} />
+                <Route path="addListing" element={<AddListingLayout />} />
+              </Route>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path="users" element={<Users />} />
+                <Route path="subscriptions" element={<Subscriptions />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </RefreshProvider>
+        </AppWithNavbar>
       </AuthProvider>
-    
     </Router>
   );
 };

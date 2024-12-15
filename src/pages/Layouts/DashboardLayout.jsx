@@ -41,11 +41,17 @@ const DashboardLayout = () => {
       label: "Dashboard",
       path: "/dashboard",
     },
+    // {
+    //   key: "2",
+    //   icon: <FaKeycdn />,
+    //   label: "Keyword Optimization",
+    //   path: "/dashboard/keyword-optimization",
+    // },
     {
-      key: "2",
-      icon: <FaKeycdn />,
-      label: "Keyword Optimization",
-      path: "/dashboard/keyword-optimization",
+      key: "5",
+      icon: <FaFileImport />,
+      label: "Bulk Import",
+      path: "/dashboard/import-products",
     },
     {
       key: "3",
@@ -53,12 +59,7 @@ const DashboardLayout = () => {
       label: "Settings",
       path: "/dashboard/profile-settings",
     },
-    {
-      key: "5",
-      icon: <FaFileImport />,
-      label: "Import Products",
-      path: "/dashboard/import-products",
-    },
+  
     {
       key: "4",
       icon: <RiMoneyEuroCircleFill />,
