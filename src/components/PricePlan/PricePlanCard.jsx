@@ -1,21 +1,49 @@
 import React from "react";
 import { Card, Button, Typography, Divider } from "antd";
 import { CheckCircleOutlined } from "@ant-design/icons";
+import { useApiRequest } from "../../hooks/useApiRequest";
+import { useNavigate } from "react-router-dom";
 
-const PricePlanCard = ({ title, price, description, features, buttonLabel, popular, color }) => {
+const PricePlanCard = ({
+  id,
+  title,
+  price,
+  description,
+  features,
+  buttonLabel,
+  popular,
+  color,
+}) => {
   const { Title, Text } = Typography;
+  const { makeApiRequest } = useApiRequest();
+  const token = localStorage.getItem("accessToken");
+  const navigation = useNavigate();
 
-  // Function to highlight only numbers in the feature (skip highlighting for "Standard" package)
+  const handleSubscription = () => {
+    if (!token) {
+      navigation("/auth");
+    } else {
+      makeApiRequest(
+        "/users/create-checkout-session/",
+        "POST",
+        { plan_id: id },
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      ).then((data)=>{
+        console.log(data.data)
+        window.location.href=data.data.checkout_url
+      }).catch((e)=>{console.log(e);
+      })
+    }
+  };
   const getHighlightedFeature = (feature) => {
-    const numberRegex = /\d+(?:,\d{3})*/g; // Matches numbers with optional commas (e.g., "1,000")
-
-    // Skip highlighting if the package is "Standard"
+    const numberRegex = /\d+(?:,\d{3})*/g;
     if (title === "Standard") {
       return feature;
     }
-
-    const parts = feature.split(numberRegex); // Split sentence by numbers
-    const matches = feature.match(numberRegex); // Extract numbers
+    const parts = feature.split(numberRegex); 
+    const matches = feature.match(numberRegex); 
 
     return (
       <>
@@ -23,7 +51,15 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
           <React.Fragment key={index}>
             {part}
             {matches && matches[index] && (
-              <span style={{ color: "purple", fontWeight: "bold" , padding:'0px 2px'}}>{matches[index]}</span>
+              <span
+                style={{
+                  color: "purple",
+                  fontWeight: "bold",
+                  padding: "0px 2px",
+                }}
+              >
+                {matches[index]}
+              </span>
             )}
           </React.Fragment>
         ))}
@@ -78,10 +114,14 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
       >
         {description}
       </Text>
-      <Title level={2} style={{ color: "#6a0dad", marginBottom: "16px", marginTop: "60px" }}>
+      <Title
+        level={2}
+        style={{ color: "#6a0dad", marginBottom: "16px", marginTop: "60px" }}
+      >
         {price}
       </Title>
       <Button
+        onClick={handleSubscription}
         type="primary"
         block
         style={{
@@ -102,8 +142,18 @@ const PricePlanCard = ({ title, price, description, features, buttonLabel, popul
         }}
       >
         {features.map((feature, index) => (
-          <li key={index} style={{ marginBottom: "8px", display: "flex", alignItems: "center", fontSize: "11px" }}>
-            <CheckCircleOutlined style={{ color: "#6a0dad", marginRight: "8px" }} />
+          <li
+            key={index}
+            style={{
+              marginBottom: "8px",
+              display: "flex",
+              alignItems: "center",
+              fontSize: "11px",
+            }}
+          >
+            <CheckCircleOutlined
+              style={{ color: "#6a0dad", marginRight: "8px" }}
+            />
             {getHighlightedFeature(feature)}
           </li>
         ))}

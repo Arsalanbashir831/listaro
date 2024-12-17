@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Layout, Menu, Dropdown, Button, Avatar, Typography, Modal } from "antd";
 import {
   DashboardOutlined,
@@ -8,7 +8,8 @@ import {
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { FaFileImport, FaKeycdn } from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
-import { RiMoneyEuroCircleFill } from "react-icons/ri";
+import { RiMoneyEuroCircleFill, RiUser2Fill } from "react-icons/ri";
+import { UserContext } from "../../context/UserContext";
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
@@ -16,6 +17,7 @@ const { confirm } = Modal;
 
 const DashboardLayout = () => {
   const navigate = useNavigate();
+ const {user}= useContext(UserContext)
 
   // Logout confirmation
   const showLogoutConfirmation = () => {
@@ -62,9 +64,9 @@ const DashboardLayout = () => {
   
     {
       key: "4",
-      icon: <RiMoneyEuroCircleFill />,
-      label: "Subscription",
-      path: "/dashboard/user-subscription",
+      icon: <RiUser2Fill />,
+      label: "User Profile",
+      path: "/dashboard/profile",
     },
     
     {
@@ -128,9 +130,7 @@ const DashboardLayout = () => {
               >
                 Prepaid Plan
               </Text>
-              <Text type="secondary" className="text-xs text-gray-500">
-                0 credits
-              </Text>
+             
             </div>
             <Button onClick={() => navigate("/pricing")}
               type="primary"
@@ -142,9 +142,9 @@ const DashboardLayout = () => {
 
           <Dropdown overlay={profileMenu} trigger={["click"]}>
             <div className="flex items-center cursor-pointer space-x-2">
-              <Avatar className="bg-green-500">A</Avatar>
+              <Avatar className="bg-green-500">  {user?.email.charAt(0).toUpperCase()}</Avatar>
               <Text className="text-sm text-gray-700">
-                arsalanbashir831@gmail.com
+             {user?.email}
               </Text>
               <DownOutlined />
             </div>

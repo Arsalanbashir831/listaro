@@ -1,25 +1,23 @@
-import React from "react";
-import { Layout, Typography, Row, Col, Avatar, Divider, Space, List, Tag } from "antd";
+import React, { useContext } from "react";
+import { Layout, Typography, Row, Col, Avatar, Divider, Space, List, Tag, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { UserContext } from "../../context/UserContext";
+import { BASE_URL } from "../../utils/Constants";
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
 
 const Profile = () => {
+const {user}=  useContext(UserContext)
   const userData = {
-    name: "John Doe",
-    email: "johndoe@example.com",
-    phone: "+1234567890",
-    joinDate: "January 10, 2023",
-    status: "Active",
+    name: user?.username,
+    email: user?.email,
+    status: user?.is_active ? 'Active':'Disable',
+    picture :user?.picture
+
   };
 
-  const recentActivity = [
-    "Logged in from a new device.",
-    "Updated profile picture.",
-    "Changed password.",
-    "Enabled two-factor authentication.",
-  ];
+
 
   return (
     <Layout style={{ background: "#f9f9f9", minHeight: "100vh", padding: "20px" }}>
@@ -27,7 +25,7 @@ const Profile = () => {
         <Row>
           {/* Header Section */}
           <Col span={24} style={{ textAlign: "left", marginBottom: "40px" }}>
-            <Avatar size={120} icon={<UserOutlined />} />
+            <Avatar src={ BASE_URL+userData.picture} size={120} icon={<UserOutlined />} />
             <Title level={3} style={{ marginTop: "20px", color: "#6a0dad" }}>
               {userData.name}
             </Title>
@@ -61,45 +59,13 @@ const Profile = () => {
               </Row>
               <Row>
                 <Col span={8}>
-                  <Text strong>Phone:</Text>
-                </Col>
-                <Col span={16}>
-                  <Text>{userData.phone}</Text>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={8}>
-                  <Text strong>Joined On:</Text>
-                </Col>
-                <Col span={16}>
-                  <Text>{userData.joinDate}</Text>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={8}>
                   <Text strong>Status:</Text>
                 </Col>
                 <Col span={16}>
-                  <Tag color={userData.status === "Active" ? "green" : "red"}>{userData.status}</Tag>
+                  <Tag color={userData.status ? "green" : "red"}>{userData.status}</Tag>
                 </Col>
               </Row>
             </Space>
-          </Col>
-
-          {/* Recent Activity Section */}
-          <Col span={12}>
-            <Title level={4} style={{ color: "#6a0dad" }}>
-              Recent Activity
-            </Title>
-            <Divider />
-            <List
-              dataSource={recentActivity}
-              renderItem={(item) => (
-                <List.Item>
-                  <Text>{item}</Text>
-                </List.Item>
-              )}
-            />
           </Col>
         </Row>
 
@@ -107,7 +73,7 @@ const Profile = () => {
         <Row gutter={24}>
           <Col span={24}>
             <Title level={4} style={{ color: "#6a0dad" }}>
-              Account Details
+              Subscription Details
             </Title>
             <Divider />
             <Space direction="vertical" size="middle" style={{ width: "100%" }}>
@@ -121,7 +87,7 @@ const Profile = () => {
               </Row>
               <Row>
                 <Col span={6}>
-                  <Text strong>Storage Used:</Text>
+                  <Text strong>Expires:</Text>
                 </Col>
                 <Col span={18}>
                   <Text>15GB of 50GB</Text>
@@ -129,11 +95,28 @@ const Profile = () => {
               </Row>
               <Row>
                 <Col span={6}>
-                  <Text strong>Last Payment:</Text>
+                  <Text strong>Listing Limit:</Text>
                 </Col>
                 <Col span={18}>
-                  <Text>$29.99 on October 15, 2023</Text>
+                  <Text>{user?.listings_limit}</Text>
                 </Col>
+              </Row>
+              <Row>
+                <Col span={6}>
+                  <Text strong>Keywords Limit:</Text>
+                </Col>
+                <Col span={18}>
+                  <Text>{user?.keywords_limit}</Text>
+                </Col>
+              </Row>
+              {/* Buttons for Upgrade and Cancel Plan */}
+              <Row justify="end">
+                <Space>
+                  <Button type="primary" style={{ backgroundColor: "#6a0dad" }}>
+                    Upgrade Plan
+                  </Button>
+                  <Button danger>Cancel Plan</Button>
+                </Space>
               </Row>
             </Space>
           </Col>

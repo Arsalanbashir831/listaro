@@ -29,6 +29,7 @@ import { FaChevronCircleDown, FaPlusCircle } from "react-icons/fa";
 import Papa from "papaparse";
 import { useNavigate } from "react-router-dom";
 import { useApiRequest } from "../../hooks/useApiRequest";
+import  { DeleteConfirmation } from "../../components/modals/DeleteConfirmation";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -44,6 +45,8 @@ const Home = () => {
   const [filteredData, setFilteredData] = useState(listing);
   const [dynamicColumns, setDynamicColumns] = useState([]);
 
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
   useEffect(() => {
     const fetchProducts = async () => {
       const token = localStorage.getItem("accessToken");
@@ -73,6 +76,45 @@ const Home = () => {
     fetchProducts();
   }, []);
 
+
+  const handleDeleteClick = (record) => {
+    setItemToDelete(record);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!itemToDelete) return;
+
+    const token = localStorage.getItem("accessToken");
+
+    try {
+      const response = await makeApiRequest(
+        `/products/${itemToDelete.id}/`,
+        "DELETE",
+        null,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+
+      if (response.success) {
+        message.success("Product deleted successfully!");
+        setListing((prev) => prev.filter((item) => item.id !== itemToDelete.id));
+        setIsDeleteModalVisible(false);
+        setItemToDelete(null);
+      } else {
+        message.error(`Error: ${response.error}`);
+      }
+    } catch (error) {
+      console.error("Delete failed:", error);
+      message.error("Failed to delete the product. Please try again.");
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalVisible(false);
+    setItemToDelete(null);
+  };
   const generateColumns = (attributes) => {
     const attributeColumns = Object.keys(attributes).map((key) => ({
       title: key.toUpperCase(),
@@ -134,6 +176,7 @@ const Home = () => {
                 <Menu.Item
                   key="delete"
                   icon={<DeleteOutlined style={{ color: "#f5222d" }} />}
+                  onClick={() => handleDeleteClick(record)}
                 >
                   Delete
                 </Menu.Item>
@@ -251,6 +294,11 @@ const Home = () => {
           loading={loading}
         />
       </Card>
+      <DeleteConfirmation
+        visible={isDeleteModalVisible}
+        onConfirm={handleDeleteConfirm}
+        onCancel={handleDeleteCancel}
+      />
     </div>
   );
 };

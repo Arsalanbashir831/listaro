@@ -1,51 +1,111 @@
 import React, { useState } from "react";
-import { Layout, Input, Typography, Row, Col, Button, Divider, Select, message } from "antd";
+import { Layout, Input, Typography, Button, Select, message, Form } from "antd";
 import { useApiRequest } from "../../hooks/useApiRequest";
 
 const { Content } = Layout;
-const { TextArea } = Input;
 const { Title, Text } = Typography;
 const { Option } = Select;
 
+// Platform-specific configurations
+const platformConfig = {
+  Shopify: {
+    fields: [
+      { name: "title", label: "Product Title", type: "text", placeholder: "Enter product title" },
+      { name: "brand", label: "Brand", type: "text", placeholder: "Enter product brand" },
+      { name: "price", label: "Price (USD)", type: "number", placeholder: "Enter price in USD" },
+      { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
+    ],
+  },
+  Amazon: {
+    fields: [
+      { name: "title", label: "Product Title", type: "text", placeholder: "Enter product title" },
+      { name: "brand", label: "Brand", type: "text", placeholder: "Enter product brand" },
+      { name: "price", label: "Price (USD)", type: "number", placeholder: "Enter price in USD" },
+      { name: "category", label: "Category", type: "text", placeholder: "Enter product category" },
+      { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
+    ],
+  },
+  eBay: {
+    fields: [
+      { name: "title", label: "Product Title", type: "text", placeholder: "Enter product title" },
+      { name: "price", label: "Price (USD)", type: "number", placeholder: "Enter price in USD" },
+      { name: "condition", label: "Condition", type: "text", placeholder: "Enter product condition" },
+      { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
+    ],
+  },
+  Etsy: {
+    fields: [
+      { name: "title", label: "Product Title", type: "text", placeholder: "Enter product title" },
+      { name: "price", label: "Price (USD)", type: "number", placeholder: "Enter price in USD" },
+      { name: "tags", label: "Tags", type: "text", placeholder: "Enter product tags (comma-separated)" },
+      { name: "material", label: "Material", type: "text", placeholder: "Enter material used" },
+      { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
+    ],
+  },
+  Wix: {
+    fields: [
+      { name: "title", label: "Product Title", type: "text", placeholder: "Enter product title" },
+      { name: "price", label: "Price (USD)", type: "number", placeholder: "Enter price in USD" },
+      { name: "inventory", label: "Inventory Count", type: "number", placeholder: "Enter inventory count" },
+      { name: "tags", label: "Tags", type: "text", placeholder: "Enter product tags (comma-separated)" },
+      { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
+    ],
+  },
+  Squarespace: {
+    fields: [
+      { name: "title", label: "Product Title", type: "text", placeholder: "Enter product title" },
+      { name: "price", label: "Price (USD)", type: "number", placeholder: "Enter price in USD" },
+      { name: "inventory", label: "Inventory Count", type: "number", placeholder: "Enter inventory count" },
+      { name: "tags", label: "Tags", type: "text", placeholder: "Enter product tags (comma-separated)" },
+      { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
+    ],
+  },
+  Walmart: {
+    fields: [
+      { name: "title", label: "Product Title", type: "text", placeholder: "Enter product title" },
+      { name: "brand", label: "Brand", type: "text", placeholder: "Enter product brand" },
+      { name: "price", label: "Price (USD)", type: "number", placeholder: "Enter price in USD" },
+      { name: "upc", label: "UPC Code", type: "text", placeholder: "Enter UPC code" },
+      { name: "inventory", label: "Inventory Count", type: "number", placeholder: "Enter inventory count" },
+      { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
+    ],
+  },
+};
+
+
 const AddListingLayout = () => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
   const [platform, setPlatform] = useState("Shopify"); // Default platform
+  const [form] = Form.useForm();
   const { makeApiRequest, loading } = useApiRequest();
 
   const handleGenerateListing = async () => {
-    if (!title || !description || !price || !platform) {
-      message.error("Please fill in all fields.");
-      return;
-    }
+    try {
+      const values = await form.validateFields();
 
-    const payload = {
-      attributes: {
-        title,
-        description,
-        price: parseFloat(price),
-      },
-      platform,
-    };
+      const payload = {
+        attributes: { ...values },
+        platform,
+      };
 
-    const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("accessToken");
 
-    const response = await makeApiRequest("/products/", "POST", payload, {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    });
+      const response = await makeApiRequest("/products/", "POST", payload, {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      });
 
-    if (response.success) {
-      message.success("Product created successfully!");
-      setTitle("");
-      setDescription("");
-      setPrice("");
-      setPlatform("Shopify");
-    } else {
-      message.error(`Error: ${response.error}`);
+      if (response.success) {
+        message.success("Product created successfully!");
+        form.resetFields();
+      } else {
+        message.error(`Error: ${response.error}`);
+      }
+    } catch (error) {
+      message.error("Please fill in all required fields.");
     }
   };
+
+  const currentPlatformConfig = platformConfig[platform];
 
   return (
     <Layout
@@ -72,99 +132,64 @@ const AddListingLayout = () => {
           Add Product
         </Title>
 
-        {/* Product Title */}
-        <div style={{ marginBottom: "16px" }}>
-          <Text strong style={{ color: "#6a0dad" }}>
-            Product Title
-          </Text>
-          <Input
-            placeholder="Enter product title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            style={{
-              marginTop: "8px",
-              borderRadius: "8px",
-              border: "1px solid #d1c4e9",
-            }}
-          />
-        </div>
+        <Form form={form} layout="vertical">
+          {/* Dynamic Fields */}
+          {currentPlatformConfig.fields.map((field) => (
+            <Form.Item
+              key={field.name}
+              name={field.name}
+              label={field.label}
+              rules={[{ required: true, message: `Please enter ${field.label.toLowerCase()}` }]}
+            >
+              {field.type === "textarea" ? (
+                <Input.TextArea placeholder={field.placeholder} rows={4} />
+              ) : (
+                <Input
+                  type={field.type}
+                  placeholder={field.placeholder}
+                  style={{
+                    borderRadius: "8px",
+                    border: "1px solid #d1c4e9",
+                  }}
+                />
+              )}
+            </Form.Item>
+          ))}
 
-        {/* Description */}
-        <div style={{ marginBottom: "16px" }}>
-          <Text strong style={{ color: "#6a0dad" }}>
-            Description
-          </Text>
-          <TextArea
-            placeholder="Enter product description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            style={{
-              marginTop: "8px",
-              borderRadius: "8px",
-              border: "1px solid #d1c4e9",
-            }}
-          />
-        </div>
+          {/* Platform Selection */}
+          <Form.Item label="Platform">
+            <Select
+              value={platform}
+              onChange={(value) => setPlatform(value)}
+              style={{ width: "100%", borderRadius: "8px" }}
+            >
+              {Object.keys(platformConfig).map((key) => (
+                <Option key={key} value={key}>
+                  {key}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        {/* Price */}
-        <div style={{ marginBottom: "16px" }}>
-          <Text strong style={{ color: "#6a0dad" }}>
-            Price (USD)
-          </Text>
-          <Input
-            type="number"
-            placeholder="Enter price in USD"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+          {/* Submit Button */}
+          <Button
+            type="primary"
+            block
+            onClick={handleGenerateListing}
+            loading={loading}
             style={{
-              marginTop: "8px",
+              background: "linear-gradient(135deg, #9c27b0, #6a0dad)",
+              border: "none",
               borderRadius: "8px",
-              border: "1px solid #d1c4e9",
-            }}
-          />
-        </div>
-
-        {/* Platform Selection */}
-        <div style={{ marginBottom: "16px" }}>
-          <Text strong style={{ color: "#6a0dad" }}>
-            Platform
-          </Text>
-          <Select
-            value={platform}
-            onChange={(value) => setPlatform(value)}
-            style={{
-              marginTop: "8px",
-              width: "100%",
-              borderRadius: "8px",
+              height: "50px",
+              fontSize: "16px",
+              fontWeight: "bold",
+              color: "#ffffff",
             }}
           >
-            <Option value="Shopify">Shopify</Option>
-            <Option value="Amazon">Amazon</Option>
-            <Option value="eBay">eBay</Option>
-            <Option value="Squarespace">Squarespace</Option>
-            <Option value="Wix">Wix</Option>
-          </Select>
-        </div>
-
-        {/* Submit Button */}
-        <Button
-          type="primary"
-          block
-          onClick={handleGenerateListing}
-          loading={loading}
-          style={{
-            background: "linear-gradient(135deg, #9c27b0, #6a0dad)",
-            border: "none",
-            borderRadius: "8px",
-            height: "50px",
-            fontSize: "16px",
-            fontWeight: "bold",
-            color: "#ffffff",
-          }}
-        >
-          {loading ? "Adding..." : "Add Product"}
-        </Button>
+            {loading ? "Adding..." : "Add Product"}
+          </Button>
+        </Form>
       </Content>
     </Layout>
   );

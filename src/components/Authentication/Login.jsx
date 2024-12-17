@@ -2,12 +2,14 @@ import { GoogleOutlined } from "@ant-design/icons";
 import { Input, Button, Space, Typography, message } from "antd";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState } from "react";
+import VerificationModal from "../modals/VerificationModal";
 
 const Login = () => {
   const { Title, Text } = Typography;
-  const { login } = useContext(AuthContext);
+  const { login, requestPasswordReset } = useContext(AuthContext); // Add requestPasswordReset from context
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -22,6 +24,20 @@ const Login = () => {
       console.error("Login error:", error);
       message.error(
         error.message || "An unexpected error occurred. Please try again."
+      );
+    }
+  };
+
+  const handleForgotPassword = async (data) => {
+    // Function to handle the forgot password process
+    try {
+      await requestPasswordReset(data.email);
+      message.success("OTP sent to your email. Please check your inbox.");
+      setIsModalVisible(false); // Close modal after successful OTP request
+    } catch (error) {
+      console.error("Error requesting password reset:", error);
+      message.error(
+        error.message || "Failed to request password reset. Please try again."
       );
     }
   };
@@ -83,9 +99,9 @@ const Login = () => {
         {/* Forgot Password */}
         <div className="flex justify-end">
           <a
-            href="#"
             className="text-purple-700 hover:underline text-sm"
             style={{ fontWeight: "bold" }}
+            onClick={() => setIsModalVisible(true)} // Show modal on click
           >
             Forgot Password?
           </a>
@@ -148,6 +164,13 @@ const Login = () => {
           Continue with Google
         </Button>
       </Space>
+
+      <VerificationModal
+        visible={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        onVerify={handleForgotPassword}
+        type="forgotPassword"
+      />
     </div>
   );
 };

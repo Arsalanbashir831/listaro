@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
         { email, password },
         { "Content-Type": "application/json" }
       );
-
+  
       if (result.success) {
         const { access, refresh } = result.data;
         localStorage.setItem("accessToken", access);
@@ -41,9 +41,18 @@ export const AuthProvider = ({ children }) => {
         throw new Error(result.error);
       }
     } catch (error) {
-      throw new Error(error.message || "Login failed.");
+      // Custom error handling for specific status codes
+      if (error.response && error.response.status === 400) {
+        throw new Error("Invalid credentials. Please check your email and password.");
+      } else if (error.response && error.response.status === 401) {
+        navigate('/otp-verification',{state:{email:email}})
+        throw new Error("Email not verified. Please check your inbox to verify your email.");
+      } else {
+        throw new Error(error.message || "Login failed. Please try again.");
+      }
     }
   };
+  
 
   const logout = async () => {
     localStorage.removeItem("accessToken");
@@ -60,13 +69,8 @@ export const AuthProvider = ({ children }) => {
         { email, password, username },
         { "Content-Type": "application/json" }
       );
-
-      if (result.success) {
-        const { access, refresh } = result.data;
-        localStorage.setItem("accessToken", access);
-        localStorage.setItem("refreshToken", refresh);
-        setAccessToken(access);
-        navigate("/dashboard");
+      if (result) {
+        navigate("/otp-verification",{state:{email:email}});
       } else {
         throw new Error(result.error);
       }
@@ -117,10 +121,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if(location.pathname !='/' && location.pathname != '/pricing' ){
+    if(location.pathname !='/' && location.pathname != '/pricing' && location.pathname!='/otp-verification' ){
       validateAndRefreshToken();
     }
-    if(location.pathname ==='/auth' && accessToken!=null ){
+    if(location.pathname ==='/auth' && accessToken!=null  && location.pathname!='/otp-verification'){
       validateAndRefreshToken();
     }
     

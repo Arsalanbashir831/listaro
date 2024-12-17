@@ -1,105 +1,50 @@
-import React, { useState } from "react";
-import { Row, Col, Switch, Typography } from "antd";
+import React, { useEffect, useState } from "react";
+import { Row, Col, Switch, Typography, Spin } from "antd";
 import PricePlanCard from "../../components/PricePlan/PricePlanCard";
+import { useApiRequest } from "../../hooks/useApiRequest";
 
 const PricingLayout = () => {
   const { Text } = Typography;
 
   // State to manage billing cycle (monthly/annual)
   const [isAnnual, setIsAnnual] = useState(true);
+  const [plans, setPlans] = useState([]);
+  const { makeApiRequest, loading } = useApiRequest();
 
-  // Base plan prices
-  const basePlans = [
-    {
-      title: "Standard",
-      monthlyPrice: 139,
-      description: "Perfect for new sellers looking to optimize their product listings with AI-powered tools.",
-      features: [
-        "50 listings/month",
-        "5,000 keywords",
-        "AI-Powered Product Title",
-        "AI-Powered Description",
-        "Keyword Generator",
-        "Keyword Optimizations",
-        "Bulk Listing Generation: 500 listings",
-        "Platform-Tailored Listings: 1 platform",
-        "Email Support",
-      ],
-      buttonLabel: "Choose Plan",
-     
-    },
-    {
-      title: "Pro",
-      monthlyPrice: 499,
-      description: "Ideal for scaling sellers who need advanced keyword optimization and tailored listings for more platforms.",
-      features: [
-        "500 listings/month",
-        "10,000 keywords",
-        "AI-Powered Product Title",
-        "AI-Powered Description",
-        "Keyword Generator",
-        "Keyword Optimizations",
-        "Bulk Listing Generation: 1,000 listings",
-        "Platform-Tailored Listings: 2 platforms",
-        "Custom Restricted Words",
-        "Custom Brand Style",
-        "Priority Email Support",
-      ],
-      buttonLabel: "Choose Plan",
-      popular: true,
-    },
-    {
-      title: "Business",
-      monthlyPrice: 799,
-      description: "Built for businesses that need to manage high-volume listings and maintain custom branding at scale.",
-      features: [
-        "1,000 listings/month",
-        "15,000 keywords",
-        "AI-Powered Product Title",
-        "AI-Powered Description",
-        "Keyword Generator",
-        "Keyword Optimizations",
-        "Bulk Listing Generation: 2,000 listings",
-        "Platform-Tailored Listings: 4 platforms",
-        "Custom Restricted Words",
-        "Custom Brand Style",
-        "Priority Email & Video Support",
-      ],
-      buttonLabel: "Choose Plan",
-    
-    },
-    {
-      title: "Enterprise",
-      monthlyPrice: 1399,
-      description: "Designed for enterprise-level clients who require maximum flexibility, unlimited platforms, and dedicated account management.",
-      features: [
-        "2,000 listings/month",
-        "20,000 keywords",
-        "AI-Powered Product Title",
-        "AI-Powered Description",
-        "Keyword Generator",
-        "Keyword Optimizations",
-        "Bulk Listing Generation: 5,000 listings",
-        "Platform-Tailored Listings: Unlimited platforms",
-        "Custom Restricted Words",
-        "Custom Brand Style",
-        "Dedicated Account Manager",
-      ],
-      buttonLabel: "Choose Plan",
-     
-    },
-  ];
+  // Fetch pricing plans from API
+  useEffect(() => {
+    makeApiRequest("/users/plans/", "GET")
+      .then((response) => {
+        if (response?.data?.plans) {
+          setPlans(response.data.plans);
+        } else {
+          console.error("Invalid response format:", response);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching plans:", error);
+      });
+  }, []);
 
   // Adjust prices based on billing cycle
-  const plans = basePlans.map((plan) => {
-    const price = isAnnual ? (plan.monthlyPrice * 12 * 0.8 )/12: plan.monthlyPrice; // 20% discount for annual plans
+  const adjustedPlans = plans
+  .filter((plan) => (isAnnual ? plan.name.includes("Annual") : plan.name.includes("Monthly")))
+  .map((plan) => {
+    const monthlyPrice = isAnnual ? plan.price / 12 : plan.price; 
     return {
-      ...plan,
-      price: isAnnual
-        ? `$${price.toFixed(0)} / month`
-        : `$${plan.monthlyPrice} / month`,
+      id: plan.id,
+      title: plan.name.split(" ")[0],
+      price: `$${monthlyPrice.toFixed(0)} / month`, 
+      description: plan.description,
+      features: Object.values(plan.features).map((feature) =>
+        typeof feature === "string" ? feature : String(feature)
+      ), 
+      buttonLabel: "Choose Plan",
+      stripePriceId: plan.stripe_price_id,
     };
   });
+
+
 
   return (
     <div style={{ padding: "40px 0", background: "#f4f4f8" }}>
@@ -107,32 +52,36 @@ const PricingLayout = () => {
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <Text style={{ color: "#6a0dad" }}>Monthly</Text>
         <Switch
-        checked={isAnnual}
-        onChange={() => setIsAnnual(!isAnnual)}
-        // checkedChildren="On"
-        // unCheckedChildren="Off"
-        style={{
-          margin: "0 8px",
-          backgroundColor: isAnnual ? "#861bbf" : "gray", // Custom colors
-        }}
-      />
+          checked={isAnnual}
+          onChange={() => setIsAnnual(!isAnnual)}
+          style={{
+            margin: "0 8px",
+            backgroundColor: isAnnual ? "#861bbf" : "gray", // Custom colors
+          }}
+        />
         <Text>
           Annual <span style={{ color: "#6a0dad" }}>20% off</span>
         </Text>
       </div>
 
       {/* Pricing Cards */}
-      <Row
-        gutter={[24, 24]}
-        justify="center"
-        style={{ maxWidth: "1200px", margin: "0 auto" }}
-      >
-        {plans.map((plan, index) => (
-          <Col key={index} xs={24} sm={12} md={6}>
-            <PricePlanCard {...plan} />
-          </Col>
-        ))}
-      </Row>
+      {loading ? (
+        <div style={{ textAlign: "center", padding: "40px 0" }}>
+          <Spin size="large" />
+        </div>
+      ) : (
+        <Row
+          gutter={[24, 24]}
+          justify="center"
+          style={{ maxWidth: "1200px", margin: "0 auto" }}
+        >
+          {adjustedPlans.map((plan) => (
+            <Col key={plan.id} xs={24} sm={12} md={6}>
+              <PricePlanCard {...plan} />
+            </Col>
+          ))}
+        </Row>
+      )}
     </div>
   );
 };
