@@ -92,13 +92,13 @@ const ProductPreview = () => {
       >
         <Row gutter={16}>
           <Col span={24}>
-            <Title level={3}>{productAttributes.title || attributes.ProductName}</Title>
+            <Title level={4}>{productAttributes.title || attributes.ProductName}</Title>
             <Text strong>Platform: </Text>
             <Tag color="blue">{platform}</Tag>
             <Divider />
-            <Title level={4}>
+            {/* <Title level={4}>
               Price: ${productAttributes.price || attributes.price || generated_attributes?.specification?.price}
-            </Title>
+            </Title> */}
             <Paragraph>
               {productAttributes.description || attributes.Description}
             </Paragraph>
