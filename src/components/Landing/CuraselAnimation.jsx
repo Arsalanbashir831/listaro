@@ -7,10 +7,18 @@ const CarouselAnimation = () => {
     "/ebay.png",
     "/shopify.png",
     "/walmart.png",
+    '/wixlogo.png',
+    '/woocomerce.png',
+    '/squarespacelogo.png',
+    '/etsylogo.png',
     "/amazon.png",
     "/ebay.png",
     "/shopify.png",
     "/walmart.png",
+    '/wixlogo.png',
+    '/woocomerce.png',
+    '/squarespacelogo.png',
+    '/etsylogo.png',
  
   ]; 
 

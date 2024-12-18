@@ -153,24 +153,7 @@ const Signup = () => {
         }}
       >
         {/* Google Signup Button */}
-        <Button
-          type="default"
-          icon={<GoogleOutlined />}
-          size="large"
-          block
-          className="rounded-lg"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: "bold",
-            color: "#fff",
-            background: "#e30513",
-            borderColor: "#db4437",
-          }}
-        >
-          Continue with Google
-        </Button>
+      
       </Space>
     </div>
   );

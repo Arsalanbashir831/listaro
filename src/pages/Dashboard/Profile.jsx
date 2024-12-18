@@ -3,12 +3,14 @@ import { Layout, Typography, Row, Col, Avatar, Divider, Space, List, Tag, Button
 import { UserOutlined } from "@ant-design/icons";
 import { UserContext } from "../../context/UserContext";
 import { BASE_URL } from "../../utils/Constants";
+import { SubscriptionContext } from "../../context/SubscriptionContext";
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
 
 const Profile = () => {
 const {user}=  useContext(UserContext)
+const {subscription} = useContext(SubscriptionContext)
   const userData = {
     name: user?.username,
     email: user?.email,
@@ -17,6 +19,14 @@ const {user}=  useContext(UserContext)
 
   };
 
+
+// Convert to Date object
+const dateObj = new Date(subscription?.end_date);
+
+// Extract day, month, and year
+const day = String(dateObj.getUTCDate()).padStart(2, "0");
+const month = String(dateObj.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-based
+const year = dateObj.getUTCFullYear();
 
 
   return (
@@ -82,31 +92,24 @@ const {user}=  useContext(UserContext)
                   <Text strong>Subscription Plan:</Text>
                 </Col>
                 <Col span={18}>
-                  <Text>Premium Plan (Expires on: December 31, 2023)</Text>
+                  <Text>{subscription?.plan} (Expires on: {day}/{month}/{year})</Text>
+                </Col>
+              </Row>
+            
+              <Row>
+                <Col span={6}>
+                  <Text strong>Used Listing :</Text>
+                </Col>
+                <Col span={18}>
+                  <Text>{subscription?.used_listngs}</Text>
                 </Col>
               </Row>
               <Row>
                 <Col span={6}>
-                  <Text strong>Expires:</Text>
+                  <Text strong>Used Keywords:</Text>
                 </Col>
                 <Col span={18}>
-                  <Text>15GB of 50GB</Text>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={6}>
-                  <Text strong>Listing Limit:</Text>
-                </Col>
-                <Col span={18}>
-                  <Text>{user?.listings_limit}</Text>
-                </Col>
-              </Row>
-              <Row>
-                <Col span={6}>
-                  <Text strong>Keywords Limit:</Text>
-                </Col>
-                <Col span={18}>
-                  <Text>{user?.keywords_limit}</Text>
+                  <Text>{subscription?.used_keywords}</Text>
                 </Col>
               </Row>
               {/* Buttons for Upgrade and Cancel Plan */}

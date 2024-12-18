@@ -70,6 +70,16 @@ const platformConfig = {
       { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
     ],
   },
+  WooCommerce: {
+    fields: [
+      { name: "title", label: "Product Title", type: "text", placeholder: "Enter product title" },
+      { name: "sku", label: "SKU", type: "text", placeholder: "Enter product SKU" },
+      { name: "price", label: "Price (USD)", type: "number", placeholder: "Enter price in USD" },
+      { name: "stock", label: "Stock Quantity", type: "number", placeholder: "Enter stock quantity" },
+      { name: "categories", label: "Categories", type: "text", placeholder: "Enter product categories" },
+      { name: "description", label: "Description", type: "textarea", placeholder: "Enter product description" },
+    ],
+  },
 };
 
 

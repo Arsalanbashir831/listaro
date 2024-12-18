@@ -10,6 +10,8 @@ import BulkListing from "../../components/Landing/BulkListing";
 import ProductTitleOptimization from "../../components/Landing/ProductTitleOptimization";
 import AIDescriptionOptimization from "../../components/Landing/AIDescriptionOptimization";
 import { FaArrowAltCircleUp } from "react-icons/fa";
+import SpecificDomain from "../../components/Landing/SpecificDomain";
+import PurposePlatform from "../../components/Landing/PurposePlatform";
 
 const fadeInVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -106,6 +108,24 @@ const LandingPageLayout = () => {
         </motion.div>
        
 
+        <motion.div
+          className="mt-16"
+          variants={fadeInVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <PurposePlatform />
+        </motion.div>
+        <motion.div
+          className="mt-16"
+          variants={fadeInVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
+          <SpecificDomain />
+        </motion.div>
         <motion.div
           className="mt-16"
           variants={fadeInVariants}

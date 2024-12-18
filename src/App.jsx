@@ -34,6 +34,7 @@ import ProductEdit from "./pages/Dashboard/ProductEdit";
 import UserProvider from "./context/UserContext";
 import SubscriptionProvider from "./context/SubscriptionContext";
 import OtpVerification from "./components/Authentication/OtpVerification";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const AppWithNavbar = ({ children }) => {
   const location = useLocation();
@@ -60,7 +61,11 @@ const App = () => {
             <RefreshProvider>
               <SubscriptionProvider>
                 <Routes>
-                  <Route path="/auth" element={<Authentication />} />
+                  <Route path="/auth" element={<>
+                  <GoogleOAuthProvider clientId="73746778952-bssa8fhr60ar7kh05ghod56nv4qeuvdi.apps.googleusercontent.com"> 
+                    <Authentication />
+                  </GoogleOAuthProvider>
+                  </>} />
                   <Route path="/otp-verification" element={<OtpVerification />} />
                   <Route path="/admin-auth" element={<AdminLogin />} />
                   <Route path="/contact" element={<ContactUs />} />

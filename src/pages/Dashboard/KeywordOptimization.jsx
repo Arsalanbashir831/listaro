@@ -48,7 +48,7 @@ const KeywordOptimization = () => {
 
     const data = {
       product_id: productId,
-      num_keywords: 5,
+      num_keywords: 50,
       platform,
     };
 
@@ -128,6 +128,10 @@ const KeywordOptimization = () => {
             <Option value="Shopify">Shopify</Option>
             <Option value="eBay">eBay</Option>
             <Option value="Etsy">Etsy</Option>
+            <Option value="Wix">Wix</Option>
+            <Option value="Squarespace">Squarespace</Option>
+            <Option value="WooCommerce">WooCommerce</Option>
+            <Option value="Walmart">Walmart</Option>
           </Select>
           <Button
             type="primary"
@@ -141,7 +145,9 @@ const KeywordOptimization = () => {
           >
             Generate Keywords
           </Button>
-          <Button
+          
+        </Col>
+        <Button
             type="default"
             icon={<DownloadOutlined />}
             onClick={handleDownloadCSV}
@@ -153,7 +159,6 @@ const KeywordOptimization = () => {
           >
             Download CSV
           </Button>
-        </Col>
       </Row>
       <Row>
         <Col span={24}>

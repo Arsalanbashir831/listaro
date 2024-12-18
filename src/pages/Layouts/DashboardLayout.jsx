@@ -10,6 +10,8 @@ import { FaFileImport, FaKeycdn } from "react-icons/fa6";
 import { IoSettingsSharp } from "react-icons/io5";
 import { RiMoneyEuroCircleFill, RiUser2Fill } from "react-icons/ri";
 import { UserContext } from "../../context/UserContext";
+import { SubscriptionContext } from "../../context/SubscriptionContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const { Header, Sider, Content } = Layout;
 const { Text } = Typography;
@@ -18,7 +20,8 @@ const { confirm } = Modal;
 const DashboardLayout = () => {
   const navigate = useNavigate();
  const {user}= useContext(UserContext)
-
+const {subscription} = useContext(SubscriptionContext)
+const {logout} = useContext(AuthContext)
   // Logout confirmation
   const showLogoutConfirmation = () => {
     confirm({
@@ -27,6 +30,7 @@ const DashboardLayout = () => {
       okText: "Logout",
       cancelText: "Cancel",
       onOk() {
+        logout()
         navigate("/auth");
       },
       onCancel() {
@@ -86,7 +90,7 @@ const DashboardLayout = () => {
       <Menu.Item key="settings">
         <Link to="/dashboard/profile-settings">Settings</Link>
       </Menu.Item>
-      <Menu.Item key="logout" onClick={showLogoutConfirmation}>
+      <Menu.Item  key="logout" onClick={showLogoutConfirmation}>
         Logout
       </Menu.Item>
     </Menu>
@@ -128,7 +132,7 @@ const DashboardLayout = () => {
                 strong
                 className="block text-sm font-semibold text-gray-700"
               >
-                Prepaid Plan
+               {subscription?.plan}
               </Text>
              
             </div>
