@@ -128,7 +128,8 @@ const Home = () => {
         title: "Actions",
         key: "actions",
         render: (_, record) => (
-          <Dropdown
+          <Dropdown 
+          trigger={["click"]}
             overlay={
               <Menu>
                 <Menu.Item
@@ -189,6 +190,7 @@ const Home = () => {
           </Dropdown>
         ),
       },
+      
     ]);
   };
 
