@@ -97,7 +97,7 @@ const ProductPreview = () => {
             <Tag color="blue">{platform}</Tag>
             <Divider />
             <Title level={4}>
-              Price: ${productAttributes.price || attributes.price}
+              Price: ${productAttributes.price || attributes.price || generated_attributes?.specification?.price}
             </Title>
             <Paragraph>
               {productAttributes.description || attributes.Description}
