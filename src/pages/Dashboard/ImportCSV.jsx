@@ -160,6 +160,8 @@ const ImportCSV = () => {
           <Option value="wix">Wix</Option>
           <Option value="shopify">Shopify</Option>
           <Option value="squarespace">Squarespace</Option>
+          <Option value="walmart">Walmart</Option>
+          <Option value="woocommerce">WooCommerce</Option>
         </Select>
       </div>
 
