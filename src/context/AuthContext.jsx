@@ -121,10 +121,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if(location.pathname !='/' && location.pathname != '/pricing' && location.pathname!='/otp-verification' ){
+    if(location.pathname !='/' && location.pathname != '/pricing' && location.pathname!='/otp-verification' && location.pathname!='/contact'){
       validateAndRefreshToken();
     }
-    if(location.pathname ==='/auth' && accessToken!=null  && location.pathname!='/otp-verification'){
+    if(location.pathname ==='/auth' && accessToken!=null  && location.pathname!='/otp-verification'&& location.pathname!='/contact'){
       validateAndRefreshToken();
     }
     

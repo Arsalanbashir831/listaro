@@ -1,17 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import { Input, Button, Form, message } from "antd";
+import { useApiRequest } from "../hooks/useApiRequest";
 
 const ContactUs = () => {
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const { makeApiRequest, loading } = useApiRequest();
 
-  const onFinish = (values) => {
-    setLoading(true);
-    setTimeout(() => {
-      message.success("Submission Successful!");
-      form.resetFields();
-      setLoading(false);
-    }, 1000);
+  const onFinish = async (values) => {
+    try {
+      const payload = {
+        name: `${values.firstName} ${values.lastName}`,
+        email: values.email,
+        message: values.question,
+      };
+
+      const response = await makeApiRequest(
+        "/users/send-contact-query/",
+        "POST",
+        payload,
+        { "Content-Type": "application/json" }
+      );
+
+      if (response.success) {
+        message.success("Your query has been submitted successfully!");
+        form.resetFields();
+      } else {
+        message.error(`Error: ${response.error}`);
+      }
+    } catch (error) {
+      message.error("An unexpected error occurred. Please try again later.");
+    }
   };
 
   return (
@@ -38,11 +56,7 @@ const ContactUs = () => {
               { required: true, message: "Please enter your first name!" },
             ]}
           >
-            <Input
-              placeholder="John"
-              size="large"
-              className="rounded-lg"
-            />
+            <Input placeholder="John" size="large" className="rounded-lg" />
           </Form.Item>
 
           {/* Last Name */}
@@ -53,11 +67,7 @@ const ContactUs = () => {
               { required: true, message: "Please enter your last name!" },
             ]}
           >
-            <Input
-              placeholder="Doe"
-              size="large"
-              className="rounded-lg"
-            />
+            <Input placeholder="Doe" size="large" className="rounded-lg" />
           </Form.Item>
 
           {/* Email */}
