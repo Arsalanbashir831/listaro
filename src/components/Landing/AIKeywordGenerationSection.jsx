@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AIKeywordGenerationSection = () => {
+  const navigation = useNavigate()
   return (
     <div className="bg-gray-50 ">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-16 ">
@@ -27,7 +29,7 @@ const AIKeywordGenerationSection = () => {
             <li>Save hours on manual keyword research with AI automation</li>
        
           </ul>
-          <button className="bg-purple-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all">
+          <button onClick={()=>navigation('/auth')} className="bg-purple-800 text-white font-semibold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-all">
           Try the AI Keyword Generator
           </button>
         </div>

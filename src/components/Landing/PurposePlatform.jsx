@@ -1,6 +1,8 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const PurposePlatform = () => {
+  const navigation = useNavigate()
   return (
     <div className="py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="container flex flex-col md:flex-row items-center justify-between gap-12 px-4">
@@ -27,7 +29,7 @@ const PurposePlatform = () => {
             </li>
           </ul>
           <div className="text-left">
-            <button className="bg-purple-800 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-purple-700 transform hover:scale-105 transition-transform duration-300">
+            <button onClick={()=>navigation('/auth')} className="bg-purple-800 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-purple-700 transform hover:scale-105 transition-transform duration-300">
               Start Creating Listings Now
             </button>
           </div>

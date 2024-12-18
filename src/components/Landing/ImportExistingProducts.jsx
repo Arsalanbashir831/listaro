@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ImportExistingProducts = () => {
+   const navigation = useNavigate()
   return (
     <div className="bg-gray-50 ">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-16 ">
@@ -27,7 +29,7 @@ const ImportExistingProducts = () => {
             <li>Save time with automated bulk imports.</li>
           </ul>
           
-          <button className="  bg-purple-800 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:from-blue-600 hover:to-green-600 transform hover:scale-105 transition-transform duration-300">
+          <button onClick={()=>navigation('/auth')} className="  bg-purple-800 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:from-blue-600 hover:to-green-600 transform hover:scale-105 transition-transform duration-300">
             Import Your Products
           </button>
         </div>
