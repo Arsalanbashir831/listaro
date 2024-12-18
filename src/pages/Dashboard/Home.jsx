@@ -38,7 +38,7 @@ const Home = () => {
   const navigate = useNavigate();
   const [listing, setListing] = useState([]);
   const [platforms, setPlatforms] = useState([]);
-  const [selectedPlatform, setSelectedPlatform] = useState("Amazon");
+  const [selectedPlatform, setSelectedPlatform] = useState("amazon");
   const { makeApiRequest, loading } = useApiRequest();
 
   const [searchText, setSearchText] = useState("");
