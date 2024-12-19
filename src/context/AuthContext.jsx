@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(result.error);
       }
     } catch (error) {
-      throw new Error(error.message || "Registration failed.");
+      throw new Error(error.message || "User Already Exist try with another username and email.");
     }
   };
 
