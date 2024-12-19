@@ -4,6 +4,7 @@ import { ArrowUpOutlined, ArrowDownOutlined, DownloadOutlined } from "@ant-desig
 import Papa from "papaparse";
 import { useParams } from "react-router-dom";
 import { useApiRequest } from "../../hooks/useApiRequest";
+import SubscriptionModal from "../../components/modals/SubscriptionModal";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -16,6 +17,7 @@ const KeywordOptimization = () => {
   const [pageSize] = useState(100); 
   const { productId } = useParams();
   const { makeApiRequest, loading } = useApiRequest();
+  const [isUpgradeModalVisible, setIsUpgradeModalVisible] = useState(false);
 
   const getProductKeywords = async (data) => {
     const token = localStorage.getItem("accessToken");
@@ -29,7 +31,7 @@ const KeywordOptimization = () => {
         message.success("Keywords generated successfully.");
         return response.data.keywords || [];
       } else {
-        message.error("Failed to generate keywords.");
+       setIsUpgradeModalVisible(true)
         return [];
       }
     } catch (error) {
@@ -112,6 +114,11 @@ const KeywordOptimization = () => {
 
   return (
     <div style={{ padding: "20px", width: "100%", backgroundColor: "#f9f9fb" }}>
+      <SubscriptionModal
+                    visible={isUpgradeModalVisible}
+                    onClose={() => setIsUpgradeModalVisible(false)}
+                    message="You need to upgrade your subscription to access AI Keyword Generation."
+                />
       <Row gutter={[16, 16]} align="middle" style={{ marginBottom: "20px" }}>
         <Col span={12}>
           <Title level={4} style={{ margin: 0, color: "#6a0dad" }}>

@@ -25,21 +25,21 @@ export const useApiRequest = () => {
       };
     } catch (error) {
       let errorMessage = "An unknown error occurred.";
-      if (error.code === "ECONNABORTED") {
-        errorMessage = "The request timed out. Please try again.";
+      if (error.response && error.response.data?.error === "No active subscription found.") {
+          errorMessage = "No active subscription found.";
       } else if (error.response) {
-        errorMessage = error.response.data.non_field_errors?.[0] || error.response.data?.message || error.response.statusText;
+          errorMessage = error.response.data.non_field_errors?.[0] || error.response.data?.message || error.response.statusText;
       } else if (error.request) {
-        errorMessage = "No response received from the server. Please try again.";
+          errorMessage = "No response received from the server. Please try again.";
       } else {
-        errorMessage = error.message;
+          errorMessage = error.message;
       }
       setError(errorMessage);
       return {
-        success: false,
-        error: errorMessage,
+          success: false,
+          error: errorMessage,
       };
-    } 
+  } 
     
     finally {
       setLoading(false); 

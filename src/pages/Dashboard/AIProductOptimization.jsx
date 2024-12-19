@@ -3,6 +3,7 @@ import { Modal, Button, Input, List, Card, Spin, Typography, Alert, message } fr
 import { useApiRequest } from "../../hooks/useApiRequest";
 import { useParams } from "react-router-dom";
 import { saveAs } from "file-saver";
+import SubscriptionModal from "../../components/modals/SubscriptionModal";
 
 const { Title, Text } = Typography;
 const { TextArea } = Input;
@@ -13,23 +14,23 @@ const AIProductOptimization = () => {
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [productData, setProductData] = useState(null);
   const [editableField, setEditableField] = useState({ field: "", index: null, value: "" });
+  const [isUpgradeModalVisible, setIsUpgradeModalVisible] = useState(false);
 
   const handleGenerateAIProduct = async () => {
     setIsModalVisible(false);
     const token = localStorage.getItem("accessToken");
     const response = await makeApiRequest(
-      `/products/recommendation/`,
-      "POST",
-      { product_id: productId },
-      { Authorization: `Bearer ${token}` }
+        `/products/recommendation/`,
+        "POST",
+        { product_id: productId },
+        { Authorization: `Bearer ${token}` }
     );
-
     if (response.success) {
-      setProductData(response.data.data);
-    } else {
-      console.error("Error fetching product details:", response.error);
+        setProductData(response.data.data);
+    } else if (response.error) {
+        setIsUpgradeModalVisible(true); // This should trigger the modal
     }
-  };
+};
 
   const handleEdit = (field, index = null, value = "") => {
     setEditableField({ field, index, value });
@@ -107,9 +108,15 @@ const AIProductOptimization = () => {
 
   if (error) {
     return (
-      <div className="max-w-2xl mx-auto mt-10">
-        <Alert message="Error" description={error} type="error" showIcon />
-      </div>
+     
+      <>
+        <SubscriptionModal
+                visible={isUpgradeModalVisible}
+                onClose={() => setIsUpgradeModalVisible(false)}
+                message="You need to upgrade your subscription to access AI Optimization."
+            />
+
+      </>
     );
   }
 
@@ -129,6 +136,7 @@ const AIProductOptimization = () => {
         </p>
       </Modal>
 
+      
       <Title level={2} className="text-purple-700 text-center">
         AI Product Optimization
       </Title>
