@@ -1,8 +1,8 @@
 import React from 'react';
-import { useNavigation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const BulkListing = () => {
-  const navigation= useNavigation()
+  const navigation= useNavigate()
   return (
     <div className="py-16 bg-gradient-to-br from-gray-50 to-white">
       <div className="container  flex flex-col md:flex-row items-center justify-between gap-12 px-4 ">
