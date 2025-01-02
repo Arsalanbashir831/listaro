@@ -3,6 +3,8 @@ import { Input, Button, Space, Typography, message } from "antd";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext, useState } from "react";
 import VerificationModal from "../modals/VerificationModal";
+import Authentication from "../../pages/Authentication";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const { Title, Text } = Typography;
@@ -43,7 +45,10 @@ const Login = () => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-gray-50 to-white shadow-lg rounded-lg max-w-md mx-auto">
+    <Authentication>
+
+   
+    <div className="p-6  rounded-lg max-w-md mx-auto">
       <Title
         level={2}
         style={{
@@ -63,7 +68,7 @@ const Login = () => {
           marginBottom: "24px",
         }}
       >
-        Please log in to your account
+        Dont have account ? <Link to={'/register'}>Register</Link>
       </Text>
 
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
@@ -155,6 +160,7 @@ const Login = () => {
         type="forgotPassword"
       />
     </div>
+    </Authentication>
   );
 };
 

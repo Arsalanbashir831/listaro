@@ -30,7 +30,7 @@ const year = dateObj.getUTCFullYear();
 
 
   return (
-    <Layout style={{ background: "#f9f9f9", minHeight: "100vh", padding: "20px" }}>
+    <Layout style={{ background: "#ffff", minHeight: "100vh", padding: "20px" }}>
       <Content style={{ maxWidth: "100%" }}>
         <Row>
           {/* Header Section */}

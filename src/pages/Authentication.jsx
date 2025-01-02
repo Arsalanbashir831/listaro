@@ -1,14 +1,14 @@
 import { Layout, Row, Col, Typography } from "antd";
 import Signup from "../components/Authentication/Signup";
 import Login from "../components/Authentication/Login";
-import { useState } from "react";
+import {  useState } from "react";
 import { GoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom"; // React Router DOM for navigation
 import { BASE_URL } from "../utils/Constants";
 const { Content } = Layout;
 const { Title, Text } = Typography;
 
-const Authentication = () => {
+const Authentication = ({children}) => {
   const [isComponent, setComponent] = useState("login");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -78,41 +78,7 @@ const Authentication = () => {
               discounts.
             </Text>
             <br />
-            {isComponent === "login" ? (
-              <Text
-                style={{
-                  fontSize: "14px",
-                  color: "white",
-                  marginTop: "16px",
-                }}
-              >
-                Don't have an account?{" "}
-                <a
-                  onClick={() => setComponent("signup")}
-                  style={{ textDecoration: "underline", color: "white" }}
-                >
-                  Register
-                </a>
-                .
-              </Text>
-            ) : (
-              <Text
-                style={{
-                  fontSize: "14px",
-                  color: "white",
-                  marginTop: "16px",
-                }}
-              >
-                Already have an account?{" "}
-                <a
-                  onClick={() => setComponent("login")}
-                  style={{ textDecoration: "underline", color: "white" }}
-                >
-                  Sign in
-                </a>
-                .
-              </Text>
-            )}
+            
           </div>
         </Col>
 
@@ -135,7 +101,7 @@ const Authentication = () => {
               borderRadius: "8px",
             }}
           >
-            {isComponent === "login" ? <Login /> : <Signup />}
+           {children}
             <div style={{ marginTop: "20px" }}>
               <GoogleLogin
                 onSuccess={handleGoogleLoginSuccess}

@@ -1,8 +1,9 @@
 import { GoogleOutlined } from "@ant-design/icons";
 import { Input, Button, Space, Typography, message } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import Authentication from "../../pages/Authentication";
 
 const Signup = () => {
   const { Title, Text } = Typography;
@@ -34,7 +35,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-gray-50 to-white shadow-lg rounded-lg max-w-md mx-auto">
+    <Authentication>
+
+   
+    <div className="p-6 rounded-lg max-w-md mx-auto">
       <Title
         level={2}
         style={{
@@ -54,7 +58,7 @@ const Signup = () => {
           marginBottom: "24px",
         }}
       >
-        Sign up to access exclusive features
+          Already have account ?<Link to={'/auth'}>Login</Link>
       </Text>
 
       <Space direction="vertical" size="large" style={{ width: "100%" }}>
@@ -156,6 +160,7 @@ const Signup = () => {
       
       </Space>
     </div>
+    </Authentication>
   );
 };
 

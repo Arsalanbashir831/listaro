@@ -10,12 +10,12 @@ import {
   message,
   Tooltip,
   Tag,
+  Select,
 } from "antd";
 import {
-  SearchOutlined,
-  EyeOutlined,
-  EditOutlined,
   DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useApiRequest } from "../../hooks/useApiRequest";
@@ -23,10 +23,12 @@ import { DeleteConfirmation } from "../../components/modals/DeleteConfirmation";
 import StoreSelector from "../../components/_common/StoreSelector";
 import { useRecoilState } from "recoil";
 import { selectedStoresState } from "../../state/StoreSelection";
+import { BiBot } from "react-icons/bi";
 
 const { Title } = Typography;
+const { Option } = Select;
 
-const Home = () => {
+const History = () => {
   const navigate = useNavigate();
   const [listing, setListing] = useState([]);
   const [filteredListings, setFilteredListings] = useState([]);
@@ -34,18 +36,26 @@ const Home = () => {
   const [searchText, setSearchText] = useState("");
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
-  const [selectedStores, setSelectedStores] = useRecoilState(selectedStoresState); // Use recoil state for selected stores
+  const [selectedStores, setSelectedStores] =
+    useRecoilState(selectedStoresState);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [bulkAction, setBulkAction] = useState("");
 
   useEffect(() => {
     const fetchProducts = async () => {
       const token = localStorage.getItem("accessToken");
       try {
-        const response = await makeApiRequest("/products/with-ai-recommendations/", "GET", null, {
-          Authorization: `Bearer ${token}`,
-        });
+        const response = await makeApiRequest(
+          "/products/without-ai-recommendations/",
+          "GET",
+          null,
+          {
+            Authorization: `Bearer ${token}`,
+          }
+        );
         if (response.success) {
           setListing(response.data);
-          setFilteredListings(response.data); // Initially, all listings are displayed
+          setFilteredListings(response.data);
         } else {
           setListing([]);
           setFilteredListings([]);
@@ -62,46 +72,44 @@ const Home = () => {
     filterListings(searchText, selectedStores);
   }, [searchText, selectedStores]);
 
-  const handleDeleteClick = (record) => {
-    setItemToDelete(record);
-    setIsDeleteModalVisible(true);
+  const filterListings = (search, stores) => {
+    const filtered = listing.filter((item) => {
+      const matchesSearch = item.attributes.productName
+        .toLowerCase()
+        .includes(search.toLowerCase());
+      const matchesAllSelectedStores =
+        stores.length === 0 ||
+        stores.every((store) => item.platforms.some((p) => p.name === store));
+
+      return matchesSearch && matchesAllSelectedStores;
+    });
+
+    setFilteredListings(filtered);
   };
 
-  const handleDeleteConfirm = async () => {
-    if (!itemToDelete) return;
-
+  const handleDeleteRows = async () => {
     const token = localStorage.getItem("accessToken");
+    const promises = selectedRows.map((id) =>
+      makeApiRequest(`/products/${id}/`, "DELETE", null, {
+        Authorization: `Bearer ${token}`,
+      })
+    );
 
     try {
-      const response = await makeApiRequest(
-        `/products/${itemToDelete.id}/`,
-        "DELETE",
-        null,
-        {
-          Authorization: `Bearer ${token}`,
-        }
+      await Promise.all(promises);
+      message.success("Selected products deleted successfully!");
+      setListing((prev) =>
+        prev.filter((item) => !selectedRows.includes(item.id))
       );
-
-      if (response.success) {
-        message.success("Product deleted successfully!");
-        setListing((prev) => prev.filter((item) => item.id !== itemToDelete.id));
-        setFilteredListings((prev) =>
-          prev.filter((item) => item.id !== itemToDelete.id)
-        );
-        setIsDeleteModalVisible(false);
-        setItemToDelete(null);
-      } else {
-        message.error(`Error: ${response.error}`);
-      }
+      setFilteredListings((prev) =>
+        prev.filter((item) => !selectedRows.includes(item.id))
+      );
+      setSelectedRows([]);
+      setBulkAction("");
     } catch (error) {
-      console.error("Delete failed:", error);
-      message.error("Failed to delete the product. Please try again.");
+      console.error("Bulk delete failed:", error);
+      message.error("Failed to delete selected products. Please try again.");
     }
-  };
-
-  const handleDeleteCancel = () => {
-    setIsDeleteModalVisible(false);
-    setItemToDelete(null);
   };
 
   const handleSearch = (e) => {
@@ -109,35 +117,10 @@ const Home = () => {
     filterListings(e.target.value, selectedStores);
   };
 
-  // const filterListings = (search, stores) => {
-  //   const filtered = listing.filter((item) => {
-  //     const matchesSearch = item.attributes.productName
-  //       .toLowerCase()
-  //       .includes(search.toLowerCase());
-  //     const matchesPlatform =
-  //       stores.length === 0 ||
-  //       item.platforms.some((p) => stores.includes(p.name)); // Check if platform name is included in selected stores
-  //     return matchesSearch && matchesPlatform;
-  //   });
-
-  //   setFilteredListings(filtered);
-  // };
-  const filterListings = (search, stores) => {
-    const filtered = listing.filter((item) => {
-      const matchesSearch = item.attributes.productName
-        .toLowerCase()
-        .includes(search.toLowerCase());
-      const matchesAllSelectedStores = stores.every((store) =>
-        item.platforms.some((p) => p.name === store)
-      ); // Check if the product has all the selected stores
-  
-      return matchesSearch && (stores.length === 0 || matchesAllSelectedStores);
-    });
-  
-    setFilteredListings(filtered);
+  const rowSelection = {
+    selectedRowKeys: selectedRows,
+    onChange: (selectedRowKeys) => setSelectedRows(selectedRowKeys),
   };
-  
-  
 
   const columns = [
     {
@@ -188,34 +171,28 @@ const Home = () => {
       key: "actions",
       render: (_, record) => (
         <Space>
-          <Tooltip title="Preview">
+          <Tooltip title="AI Optimization">
             <Button
-              type="text"
-              icon={<EyeOutlined style={{ color: "black" }} />}
+           type="outlined"
               onClick={() =>
-                navigate(`/dashboard/product-preview/${record.id}`, {
-                  state: { product: record },
-                })
+                navigate(`/dashboard/product-optimization/${record.id}`)
               }
-            />
+             
+            >
+              <BiBot />
+            </Button>
           </Tooltip>
+
           <Tooltip title="Edit">
             <Button
-              type="text"
-              icon={<EditOutlined style={{ color: "black" }} />}
+            type="outlined"
               onClick={() =>
-                navigate(`/dashboard/product-edit/${record.id}`, {
-                  state: { product: record },
-                })
+                navigate(`/dashboard/product-edit/${record.id}`)
               }
-            />
-          </Tooltip>
-          <Tooltip title="Delete">
-            <Button
-              type="text"
-              icon={<DeleteOutlined style={{ color: "black" }} />}
-              onClick={() => handleDeleteClick(record)}
-            />
+             
+            >
+              <EditOutlined />
+            </Button>
           </Tooltip>
         </Space>
       ),
@@ -227,7 +204,7 @@ const Home = () => {
       <Row justify="space-between" align="middle" className="mb-6">
         <Col>
           <Title level={3} style={{ color: "#6a0dad" }}>
-            Generated Listings
+            Bulk Listings
           </Title>
           <Input
             placeholder="Search listings"
@@ -239,7 +216,25 @@ const Home = () => {
           />
         </Col>
         <Col>
-          <StoreSelector />
+          <Space>
+            <StoreSelector />
+            <Select
+              value={bulkAction || undefined} // Value is undefined by default
+              onChange={(value) => setBulkAction(value)}
+              placeholder="Select Bulk Action" // Placeholder text
+              style={{ width: 200 }}
+            >
+              <Option value="delete">Delete Selected</Option>
+            </Select>
+
+            <Button
+              type="primary"
+              onClick={handleDeleteRows}
+              disabled={!selectedRows.length || bulkAction !== "delete"}
+            >
+              Apply
+            </Button>
+          </Space>
         </Col>
       </Row>
 
@@ -249,19 +244,14 @@ const Home = () => {
         pagination={{ pageSize: 5 }}
         bordered={false}
         rowKey={(record) => record.id}
+        rowSelection={rowSelection}
         rowClassName={(record, index) =>
           index % 2 === 0 ? "bg-purple-50" : ""
         }
         loading={loading}
       />
-
-      <DeleteConfirmation
-        visible={isDeleteModalVisible}
-        onConfirm={handleDeleteConfirm}
-        onCancel={handleDeleteCancel}
-      />
     </div>
   );
 };
 
-export default Home;
+export default History;

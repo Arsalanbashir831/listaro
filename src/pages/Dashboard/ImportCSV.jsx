@@ -1,209 +1,198 @@
 import React, { useState } from "react";
-import { Table, Button, Upload, message, Input, Space, Select } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import Papa from "papaparse";
+import { Upload, message, Table, Button, Tooltip, Alert } from "antd";
+import { InboxOutlined, RobotOutlined } from "@ant-design/icons";
 import { useApiRequest } from "../../hooks/useApiRequest";
+import { useNavigate } from "react-router-dom";
 
-const { Option } = Select;
+const { Dragger } = Upload;
 
 const ImportCSV = () => {
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
   const [file, setFile] = useState(null);
-  const [editingRowIndex, setEditingRowIndex] = useState(null);
-  const [selectedPlatform, setSelectedPlatform] = useState("amazon"); // Default platform
-  const { makeApiRequest, loading } = useApiRequest();
-
-  // Handle CSV upload and parse
-  const handleUpload = (file) => {
+  const { makeApiRequest } = useApiRequest();
+  const [isDraggerVisible, setIsDraggerVisible] = useState(true); // Visibility state for Dragger
+const navigation = useNavigate()
+  // Handle CSV upload and send to API
+  const handleUpload = async (file) => {
+    const token = localStorage.getItem('accessToken')
     setFile(file);
-    Papa.parse(file, {
-      header: true,
-      skipEmptyLines: true,
-      complete: function (results) {
-        const parsedData = results.data;
-        if (parsedData.length === 0) {
-          message.error("CSV file is empty or not formatted correctly.");
-          return;
-        }
-        const headers = Object.keys(parsedData[0]);
-        const columnData = headers.map((header) => ({
-          title: header,
-          dataIndex: header,
-          key: header,
-          render: (text, record, rowIndex) =>
-            editingRowIndex === rowIndex ? (
-              <Input
-                defaultValue={text}
-                onChange={(e) =>
-                  handleUpdateRowValue(rowIndex, header, e.target.value)
-                }
-              />
-            ) : (
-              text
-            ),
-        }));
-        setColumns(columnData);
-        setData(parsedData);
-        message.success("CSV file uploaded successfully.");
-      },
-      error: function () {
-        message.error("Failed to parse CSV file.");
-      },
-    });
-  };
-
-  // Add a new row to the table
-  const handleAddRow = () => {
-    const newRow = {};
-    columns.forEach((column) => {
-      newRow[column.dataIndex] = "";
-    });
-    setData([...data, newRow]);
-    setEditingRowIndex(data.length);
-  };
-
-  // Update row value
-  const handleUpdateRowValue = (rowIndex, fieldName, value) => {
-    const updatedData = [...data];
-    updatedData[rowIndex][fieldName] = value;
-    setData(updatedData);
-  };
-
-  // Confirm the row editing
-  const handleConfirmRow = () => {
-    setEditingRowIndex(null);
-    message.success("New row confirmed successfully!");
-  };
-
-  // Confirm the bulk listing by uploading the updated CSV
-  const handleConfirmListing = async () => {
-    const csvData = Papa.unparse(data);
-    let csvFile;
-
-    if (file && !(file instanceof Blob)) {
-      csvFile = file;
-    } else {
-      csvFile = new File([csvData], file?.name || "updated_file.csv", {
-        type: "text/csv",
-      });
-    }
-
-    const token = localStorage.getItem("accessToken");
     const formData = new FormData();
-    formData.append("file", csvFile);
-    formData.append("platform", selectedPlatform);
+    formData.append("file", file);
 
     try {
-      const response = await makeApiRequest(
-        "/products/upload/",
-        "POST",
-        formData,
-        {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        }
-      );
+      const response = await makeApiRequest("/products/upload/", "POST", formData, {
+        "Content-Type": "multipart/form-data",
+        Authorization:`Bearer ${token}`
+      });
 
       if (response.success) {
-        message.success("Bulk listing confirmed!");
-        setData([]);
-        setColumns([]);
-        setFile(null);
+        const responseData = response.data;
+        navigation('/dashboard/history-products')
+        // Generate table columns dynamically based on the response
+        const headers = Object.keys(responseData[0]?.attributes || {});
+        const columnData = headers.map((header) => ({
+          title: header.charAt(0).toUpperCase() + header.slice(1),
+          dataIndex: ["attributes", header],
+          key: header,
+        }));
+
+        // Add Platforms column
+        columnData.push({
+          title: "Platforms",
+          key: "platforms",
+          render: (_, record) =>
+            record.platforms.map((platform) => (
+              <span
+                key={platform.id}
+                style={{
+                  display: "inline-block",
+                  margin: "2px 4px",
+                  padding: "4px 8px",
+                  backgroundColor: "#e9d6ff",
+                  color: "#7e22ce",
+                  borderRadius: "4px",
+                }}
+              >
+                {platform.name}
+              </span>
+            )),
+        });
+
+        // Add Actions column
+        columnData.push({
+          title: "Actions",
+          key: "actions",
+          render: (_, record) => (
+            <Tooltip title="AI Generation">
+              <Button
+                type="primary"
+                shape="circle"
+                icon={<RobotOutlined />}
+                onClick={() => handleAIGeneration(record)}
+              />
+            </Tooltip>
+          ),
+        });
+
+        setColumns(columnData);
+        setData(responseData);
+        setIsDraggerVisible(false); // Hide Dragger container
+        message.success("CSV uploaded and data loaded successfully.");
       } else {
-        message.error("Failed to confirm bulk listing. Please try again.");
+        message.error(`Upload failed: ${response.error}`);
       }
     } catch (error) {
-      message.error("An error occurred during bulk listing.");
+      console.error("Error uploading CSV:", error);
+      message.error("Failed to upload the CSV. Please try again.");
+    }
+    return false; // Prevent default upload behavior
+  };
+
+  // Handle AI Generation action
+  const handleAIGeneration = async (record) => {
+    try {
+      const response = await makeApiRequest("/ai/generate", "POST", record, {
+        "Content-Type": "application/json",
+      });
+
+      if (response.success) {
+        message.success("AI generation successful!");
+      } else {
+        message.error(`Error: ${response.error}`);
+      }
+    } catch (error) {
+      console.error("AI generation failed:", error);
+      message.error("Failed to perform AI generation. Please try again.");
     }
   };
 
-  return (
-    <div
-      style={{
-        padding: "20px",
-        maxWidth: "1000px",
-        margin: "auto",
-        background: "#f9f9fb",
-        borderRadius: "8px",
-        boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <Upload
-        accept=".csv"
-        showUploadList={false}
-        beforeUpload={(file) => {
-          handleUpload(file);
-          return false;
-        }}
-      >
-        <Button
-          icon={<UploadOutlined />}
-          type="primary"
-          style={{ backgroundColor: "#6a0dad", borderColor: "#6a0dad" }}
-        >
-          Upload CSV File
-        </Button>
-      </Upload>
-
-      {/* Platform Selection */}
-      <div style={{ marginTop: "20px" }}>
-        <label style={{ marginRight: "10px" }}>Select Platform:</label>
-        <Select
-          defaultValue={selectedPlatform}
-          style={{ width: 200 }}
-          onChange={(value) => setSelectedPlatform(value)}
-        >
-          <Option value="amazon">Amazon</Option>
-          <Option value="ebay">eBay</Option>
-          <Option value="etsy">Etsy</Option>
-          <Option value="wix">Wix</Option>
-          <Option value="shopify">Shopify</Option>
-          <Option value="squarespace">Squarespace</Option>
-          <Option value="walmart">Walmart</Option>
-          <Option value="woocommerce">WooCommerce</Option>
-        </Select>
-      </div>
-
-      {data.length > 0 && (
+  const infoMessage = (
+    <Alert
+      className="my-5"
+      message="CSV Format Required"
+      description={
         <>
-          <Table
-            dataSource={data}
-            columns={columns}
-            rowKey={(record, index) => index}
-            pagination={false}
-            bordered
-            style={{ marginTop: "20px" }}
-          />
+          <p>
+            The uploaded CSV file should contain the following columns:
+            <ul>
+              <li><b>Product Name:</b> The name of the product.</li>
+              <li><b>Brand Name:</b> The brand of the product.</li>
+              <li><b>Price:</b> The price in USD.</li>
+              <li><b>Category:</b> The category of the product.</li>
+              <li><b>Description:</b> A brief description of the product.</li>
+              <li><b>Platforms:</b> A pipe-separated list of platforms (e.g., "Amazon|eBay|Walmart").</li>
+            </ul>
+          </p>
+        </>
+      }
+      type="info"
+      showIcon
+      style={{ marginBottom: "20px" }}
+    />
+  );
 
-          <Space
+  return (
+    <>
+      {/* Info Section */}
+      {infoMessage}
+
+      {isDraggerVisible && ( // Conditional rendering for Dragger
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "start",
+            height: "70vh",
+            background: "#fff",
+            position: "relative",
+          }}
+        >
+          <div
             style={{
-              marginTop: "20px",
-              display: "flex",
-              justifyContent: "center",
+              padding: "20px",
+              width: "100%",
+              maxWidth: "600px",
+              borderRadius: "8px",
+              background: "#fff",
             }}
           >
-            {editingRowIndex !== null && (
-              <Button
-                type="primary"
-                onClick={handleConfirmRow}
-                style={{ backgroundColor: "#6a0dad", borderColor: "#6a0dad" }}
-              >
-                Confirm New Row
-              </Button>
-            )}
-            <Button
-              type="primary"
-              onClick={handleConfirmListing}
-              loading={loading}
-              style={{ backgroundColor: "#6a0dad", borderColor: "#6a0dad" }}
+            <Dragger
+              accept=".csv"
+              showUploadList={false}
+              beforeUpload={handleUpload}
+              style={{
+                padding: "20px",
+                borderRadius: "8px",
+              }}
             >
-              Confirm Bulk Listing
-            </Button>
-          </Space>
-        </>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined style={{ fontSize: "32px", color: "#6a0dad" }} />
+              </p>
+              <p className="ant-upload-text">
+                Drag and drop a CSV file here, or click to browse.
+              </p>
+              <p className="ant-upload-hint">
+                Only CSV files are accepted. Ensure the file is properly formatted.
+              </p>
+            </Dragger>
+          </div>
+        </div>
       )}
-    </div>
+
+      {/* Render Table if data exists */}
+      {data.length > 0 && (
+        <div style={{ padding: "20px", background: "#fff" }}>
+          <Table
+            columns={columns}
+            dataSource={data}
+            rowKey={(record, index) => record.id || index}
+            pagination={{ pageSize: 5 }}
+            bordered
+          />
+        </div>
+      )}
+    </>
   );
 };
 

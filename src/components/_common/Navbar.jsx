@@ -6,8 +6,8 @@ import { MenuOutlined } from "@ant-design/icons";
 const { Header } = Layout;
 
 const Navbar = () => {
-  // Navigation items
-const navigation = useNavigate()
+  const navigation = useNavigate();
+
   const navItems = [
     { key: "home", label: "Home", path: "/" },
     { key: "pricing", label: "Pricing", path: "/pricing" },
@@ -21,19 +21,16 @@ const navigation = useNavigate()
   };
 
   return (
-    <Header 
+    <Header
       style={{
-        // position: "fixed",
-      
         zIndex: 1,
         width: "100%",
-        background: "white",
+        background: "#f9fafb",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         padding: "0 20px",
-        
-        // boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
+        boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
       }}
     >
       {/* Logo */}
@@ -45,28 +42,37 @@ const navigation = useNavigate()
           fontWeight: "bold",
         }}
       >
-        <img src="/listaro_logo.svg" width={150} alt="Logo" />
+        <img src="/listaro_logo.svg" width={250} alt="Logo" />
       </div>
 
       {/* Desktop Navigation */}
       <Menu
-        mode="horizontal"
-        selectable={false}
-        className="desktop-menu"
-        style={{
-          display: "none",
-          background: "transparent",
-          borderBottom: "none",
-        }}
-      >
-        {navItems.map((item) => (
-          <Menu.Item key={item.key}>
-            <Link to={item.path} style={{ color: "black" }}>
-              {item.label}
-            </Link>
-          </Menu.Item>
-        ))}
-      </Menu>
+  mode="horizontal"
+  selectable={false}
+  className="desktop-menu"
+  style={{
+    display: "none",
+    background: "transparent",
+    borderBottom: "none",
+    justifyContent: "center",
+    width: "100%",
+  }}
+>
+  {navItems.map((item) => (
+    <Menu.Item
+      key={item.key}
+      style={{
+        padding: "0 15px",
+        fontSize: "16px",
+        fontWeight: "500",
+      }}
+    >
+      <Link to={item.path} style={{ color: "black", textDecoration: "none" }}>
+        {item.label}
+      </Link>
+    </Menu.Item>
+  ))}
+</Menu>
 
       {/* Mobile Hamburger Menu */}
       <Button
@@ -76,36 +82,52 @@ const navigation = useNavigate()
           background: "none",
           border: "none",
           fontSize: "18px",
-          display: "block", // Hide by default for desktop
+          display: "block", // Default for mobile
         }}
         onClick={toggleDrawer}
       />
 
       {/* Drawer for Mobile Menu */}
       <Drawer
-        // title="Listaro"
         placement="left"
         onClose={toggleDrawer}
         open={isDrawerOpen}
-        bodyStyle={{ padding: "0" }}
+        bodyStyle={{ padding: "0", background: "#f5f5f5" }}
       >
         <Menu
           mode="vertical"
           selectable={false}
           style={{
             borderRight: "none",
+            padding: "20px 0",
           }}
         >
           {navItems.map((item) => (
-            <Menu.Item key={item.key}>
-              <Link to={item.path} onClick={toggleDrawer}>
+            <Menu.Item
+              key={item.key}
+              style={{
+                fontSize: "16px",
+                fontWeight: "500",
+              }}
+            >
+              <Link
+                to={item.path}
+                onClick={toggleDrawer}
+                style={{ color: "black" }}
+              >
                 {item.label}
               </Link>
             </Menu.Item>
           ))}
           <Menu.Divider />
-          <div className="px-5 mt-5">
-            <Button className="bg-purple-700 text-white px-5 w-full">
+          <div style={{ padding: "20px" }}>
+            <Button
+              className="bg-purple-700 text-white px-5 w-full"
+              onClick={() => {
+                toggleDrawer();
+                navigation("/auth");
+              }}
+            >
               Get Started
             </Button>
           </div>
@@ -116,12 +138,12 @@ const navigation = useNavigate()
       <div
         className="desktop-menu"
         style={{
-          display: "none", // Show only for desktop
+          display: "none", // Default hidden for mobile
         }}
       >
         <Button
-        onClick={() => navigation('/auth')}
           type="primary"
+          onClick={() => navigation("/auth")}
           className="bg-purple-700"
           style={{
             marginLeft: "20px",
@@ -144,6 +166,10 @@ const navigation = useNavigate()
               display: none !important;
             }
           }
+          .desktop-menu a:hover {
+            color: #722ed1 !important; /* Purple hover for links */
+          }
+         
         `}
       </style>
     </Header>

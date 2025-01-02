@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   Typography,
@@ -9,34 +9,58 @@ import {
   List,
   Button,
   message,
-  Tag,
+  Tabs,
 } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useApiRequest } from "../../hooks/useApiRequest";
 
 const { Title } = Typography;
+const { TabPane } = Tabs;
 
 const ProductEdit = () => {
-  const location = useLocation();
+  const { productId } = useParams(); // Get productId from params
   const navigate = useNavigate();
   const { makeApiRequest } = useApiRequest();
 
-  const productData = location.state.product;
+  const [productData, setProductData] = useState(null);
+  const [attributes, setAttributes] = useState({});
+  const [platforms, setPlatforms] = useState([]);
 
-  const [attributes, setAttributes] = useState(productData.attributes);
-  const [platform, setPlatform] = useState(productData.platform);
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const token = localStorage.getItem("accessToken");
+      try {
+        const response = await makeApiRequest(`/products/${productId}/`, "GET", {}, {
+          Authorization: `Bearer ${token}`,
+        });
+        if (response.success) {
+          setProductData(response.data);
+          setAttributes(response.data.attributes);
+          setPlatforms(response.data.platforms);
+        } else {
+          message.error("Failed to fetch product data.");
+        }
+      } catch (error) {
+        message.error("An error occurred while fetching product data.");
+      }
+    };
 
-  // Save Product Changes
+    fetchProduct();
+  }, [productId]);
+
   const handleSave = async () => {
     const updatedProduct = {
       attributes,
-      platform,
+      platforms: platforms.map((platform) => ({
+        ...platform,
+        generated_attributes: platform.generated_attributes,
+      })),
     };
 
     try {
       const response = await makeApiRequest(
-        `/products/${productData.id}/`,
+        `/products/${productId}/`,
         "PUT",
         updatedProduct,
         {
@@ -47,9 +71,7 @@ const ProductEdit = () => {
 
       if (response.success) {
         message.success("Product updated successfully!");
-        navigate(`/dashboard/product-preview`, {
-          state: { product: response.data },
-        });
+        navigate(`/dashboard/product-preview/${productId}`);
       } else {
         message.error("Failed to update product.");
       }
@@ -61,6 +83,16 @@ const ProductEdit = () => {
   const handleAttributeChange = (key, value) => {
     setAttributes({ ...attributes, [key]: value });
   };
+
+  const handleGeneratedAttributeChange = (platformIndex, key, value) => {
+    const updatedPlatforms = [...platforms];
+    updatedPlatforms[platformIndex].generated_attributes[key] = value;
+    setPlatforms(updatedPlatforms);
+  };
+
+  if (!productData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div
@@ -104,13 +136,53 @@ const ProductEdit = () => {
         />
       </Card>
 
-      {/* Platform */}
+      {/* Platforms */}
       <Card
-        title="Platform"
+        title="Platforms"
         bordered
         style={{ borderRadius: "8px", marginBottom: "20px" }}
       >
-        <Tag color="blue">{platform}</Tag>
+        <Tabs>
+          {platforms.map((platform, index) => (
+            <TabPane tab={platform.name} key={platform.id}>
+              <Divider>Generated Attributes</Divider>
+              {Object.keys(platform.generated_attributes || {}).length > 0 ? (
+                <List
+                  dataSource={Object.entries(platform.generated_attributes)}
+                  renderItem={([key, value]) => (
+                    <List.Item>
+                      <Row style={{ width: "100%" }} gutter={16}>
+                        <Col span={6}>
+                          <Title level={5} style={{ margin: 0 }}>
+                            {key}
+                          </Title>
+                        </Col>
+                        <Col span={18}>
+                          <Input
+                            value={
+                              Array.isArray(value) ? value.join(", ") : value
+                            }
+                            onChange={(e) =>
+                              handleGeneratedAttributeChange(
+                                index,
+                                key,
+                                Array.isArray(value)
+                                  ? e.target.value.split(", ")
+                                  : e.target.value
+                              )
+                            }
+                          />
+                        </Col>
+                      </Row>
+                    </List.Item>
+                  )}
+                />
+              ) : (
+                <p>No generated attributes available for this platform.</p>
+              )}
+            </TabPane>
+          ))}
+        </Tabs>
       </Card>
 
       {/* Save Button */}

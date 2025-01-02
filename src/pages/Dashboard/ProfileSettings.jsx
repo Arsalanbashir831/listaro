@@ -111,7 +111,7 @@ const ProfileSettings = () => {
 
   return (
     <Layout
-      style={{ minHeight: "100vh", background: "#f9f9f9", padding: "20px" }}
+      style={{ minHeight: "100vh", background: "#ffff", padding: "20px" }}
     >
       <Content>
         <Title level={3} style={{ color: "#6a0dad", marginBottom: "20px" }}>

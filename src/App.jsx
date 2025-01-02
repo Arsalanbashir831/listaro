@@ -35,10 +35,15 @@ import UserProvider from "./context/UserContext";
 import SubscriptionProvider from "./context/SubscriptionContext";
 import OtpVerification from "./components/Authentication/OtpVerification";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Login from "./components/Authentication/Login";
+import Signup from "./components/Authentication/Signup";
+import History from "./pages/Dashboard/History";
+
+
 
 const AppWithNavbar = ({ children }) => {
   const location = useLocation();
-  const excludedRoutes = ["/auth", "/admin-auth", "/admin", "/dashboard",'/otp-verification'];
+  const excludedRoutes = ["/auth", "/admin-auth", "/admin", "/dashboard",'/otp-verification','/register'];
   const isExcluded = excludedRoutes.some((route) =>
     location.pathname.startsWith(route)
   );
@@ -63,7 +68,12 @@ const App = () => {
                 <Routes>
                   <Route path="/auth" element={<>
                   <GoogleOAuthProvider clientId="73746778952-bssa8fhr60ar7kh05ghod56nv4qeuvdi.apps.googleusercontent.com"> 
-                    <Authentication />
+                    <Login />
+                  </GoogleOAuthProvider>
+                  </>} />
+                  <Route path="/register" element={<>
+                  <GoogleOAuthProvider clientId="73746778952-bssa8fhr60ar7kh05ghod56nv4qeuvdi.apps.googleusercontent.com"> 
+                    <Signup />
                   </GoogleOAuthProvider>
                   </>} />
                   <Route path="/otp-verification" element={<OtpVerification />} />
@@ -74,22 +84,26 @@ const App = () => {
                   <Route path="/dashboard" element={<DashboardLayout />}>
                     <Route index element={<Home />} />
                     <Route
+                      path="history-products"
+                      element={<History />}
+                    />
+                     {/* <Route
                       path="keyword-optimization/:productId"
                       element={<KeywordOptimization />}
-                    />
+                    /> */}
                     <Route
                       path="product-optimization/:productId"
                       element={<AIProductOptimization />}
                     />
                     <Route
-                      path="product-preview"
+                      path="product-preview/:productId"
                       element={<ProductPreview />}
                     />
-                    <Route path="product-edit" element={<ProductEdit />} />
-                    <Route
+                    <Route path="product-edit/:productId" element={<ProductEdit />} />
+                    {/* <Route
                       path="image-optimization"
                       element={<ImageOptimization />}
-                    />
+                    /> */}
                     <Route path="profile" element={<Profile />} />
                     <Route
                       path="profile-settings"
