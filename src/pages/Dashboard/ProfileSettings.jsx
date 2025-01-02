@@ -223,7 +223,7 @@ const ProfileSettings = () => {
                   Save
                 </Button>
               )}
-              <Button
+              {/* <Button
                 type="default"
                 onClick={handleChangePassword}
                 style={{
@@ -234,7 +234,7 @@ const ProfileSettings = () => {
                 }}
               >
                 Change Password
-              </Button>
+              </Button> */}
             </Space>
           </Row>
         </Form>
