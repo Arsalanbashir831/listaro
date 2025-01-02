@@ -8,7 +8,7 @@ import {
   ArrowRightOutlined,
 } from "@ant-design/icons";
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
-import { BiBox, BiCard, BiHistory } from "react-icons/bi";
+import { BiBox, BiCard, BiHistory, BiSupport } from "react-icons/bi";
 import { IoSettingsSharp } from "react-icons/io5";
 import { RiUser2Fill } from "react-icons/ri";
 import { UserContext } from "../../context/UserContext";
@@ -91,6 +91,12 @@ const DashboardLayout = () => {
       icon: <RiUser2Fill />,
       label: "User Profile",
       path: "/dashboard/profile",
+    },
+    {
+      key: "/dashboard/support",
+      icon: <BiSupport />,
+      label: "Help & Support",
+      path: "/dashboard/support",
     },
    
   ];

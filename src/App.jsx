@@ -87,6 +87,10 @@ const App = () => {
                       path="history-products"
                       element={<History />}
                     />
+                     <Route
+                      path="support"
+                      element={<ContactUs />}
+                    />
                      {/* <Route
                       path="keyword-optimization/:productId"
                       element={<KeywordOptimization />}
